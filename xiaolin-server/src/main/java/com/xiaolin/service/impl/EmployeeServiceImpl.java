@@ -1,5 +1,7 @@
 package com.xiaolin.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaolin.constant.JwtClaimsConstant;
 import com.xiaolin.constant.MessageConstant;
 import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.dto.EmployeeLoginDTO;
@@ -8,28 +10,32 @@ import com.xiaolin.exception.AccountLockedException;
 import com.xiaolin.exception.AccountNotFoundException;
 import com.xiaolin.exception.PasswordErrorException;
 import com.xiaolin.mapper.EmployeeMapper;
+import com.xiaolin.properties.JwtProperties;
 import com.xiaolin.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xiaolin.utils.JwtUtil;
+import com.xiaolin.vo.EmployeeLoginVO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+@RequiredArgsConstructor
+public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
 
-    @Autowired
-    private EmployeeMapper employeeMapper;
+    private final JwtProperties jwtProperties;
 
-    /**
-     * 员工登录
-     *
-     * @param employeeLoginDTO
-     * @return
-     */
-    public Employee login(EmployeeLoginDTO employeeLoginDTO) {
+    @Override
+    public EmployeeLoginVO login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
-        Employee employee = employeeMapper.getByUsername(username);
+        Employee employee = baseMapper.getByUsername(username);
 
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
         if (employee == null) {
@@ -37,20 +43,34 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
 
-        //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
+        //先加密再比对密码
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        if (employee.getStatus() == StatusConstant.DISABLE) {
+        if (StatusConstant.DISABLE.equals(employee.getStatus())) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
 
-        //3、返回实体对象
-        return employee;
+        //3、登录成功后，生成jwt令牌
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
+        claims.put(JwtClaimsConstant.USERNAME, employee.getUsername());
+        claims.put(JwtClaimsConstant.NAME, employee.getName());
+        String token = JwtUtil.createJWT(
+                jwtProperties.getAdminSecretKey(),
+                jwtProperties.getAdminTtl(),
+                claims);
+
+        return EmployeeLoginVO.builder()
+                .id(employee.getId())
+                .userName(employee.getUsername())
+                .name(employee.getName())
+                .token(token)
+                .build();
     }
 
 }

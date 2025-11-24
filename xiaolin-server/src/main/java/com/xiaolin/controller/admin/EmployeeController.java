@@ -1,22 +1,16 @@
 package com.xiaolin.controller.admin;
 
-import com.xiaolin.constant.JwtClaimsConstant;
 import com.xiaolin.dto.EmployeeLoginDTO;
-import com.xiaolin.entity.Employee;
-import com.xiaolin.properties.JwtProperties;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.EmployeeService;
-import com.xiaolin.utils.JwtUtil;
 import com.xiaolin.vo.EmployeeLoginVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 员工管理
@@ -24,47 +18,30 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@RequiredArgsConstructor
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final EmployeeService employeeService;
 
     /**
      * 登录
      *
-     * @param employeeLoginDTO
-     * @return
+     * @param employeeLoginDTO 用户信息
+     * @return 成功 失败
      */
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
-
-        Employee employee = employeeService.login(employeeLoginDTO);
-
-        //登录成功后，生成jwt令牌
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
-        String token = JwtUtil.createJWT(
-                jwtProperties.getAdminSecretKey(),
-                jwtProperties.getAdminTtl(),
-                claims);
-
-        EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
-                .id(employee.getId())
-                .userName(employee.getUsername())
-                .name(employee.getName())
-                .token(token)
-                .build();
-
-        return Result.success(employeeLoginVO);
+        if (StringUtils.isAnyBlank(employeeLoginDTO.getUsername(), employeeLoginDTO.getPassword())){
+            return Result.error("用户名或密码不能为空");
+        }
+        return Result.success(employeeService.login(employeeLoginDTO));
     }
 
     /**
      * 退出
      *
-     * @return
+     * @return 成功
      */
     @PostMapping("/logout")
     public Result<String> logout() {

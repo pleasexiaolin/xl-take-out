@@ -8,18 +8,10 @@ spring:
     allow-circular-references: true
   datasource:
     druid:
-      driver-class-name: ${sky.datasource.driver-class-name}
-      url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${sky.datasource.username}
-      password: ${sky.datasource.password}
-
-mybatis:
-  #mapper配置文件
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.sky.entity
-  configuration:
-    #开启驼峰命名
-    map-underscore-to-camel-case: true
+      driver-class-name: ${xl.datasource.driver-class-name}
+      url: jdbc:mysql://${xl.datasource.host}:${xl.datasource.port}/${xl.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${xl.datasource.username}
+      password: ${xl.datasource.password}
 
 logging:
   level:
@@ -33,7 +25,17 @@ xl:
   jwt:
     # 设置jwt签名加密时使用的秘钥
     admin-secret-key: xiaolin
+    user-secret-key: xiaoru
     # 设置jwt过期时间
     admin-ttl: 7200000
+    user-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-token-name: token
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+    property:
+      prefix: ENC(
+      suffix: )

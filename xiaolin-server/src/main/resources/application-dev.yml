@@ -1,8 +1,8 @@
-sky:
+xl:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: localhost
-    port: 3306
-    database: xiaolin_take_out
-    username: root
-    password: xxx
+    host: ENC(f3Sjo1LUE+A25lr42fBTxKSNAKcwMxmlA1NEdvDVmR1uNg9HqrINHfY3PJcjG4kL)
+    port: ENC(BO+/M+WIlc7YWsp2F9qCV0KXgLz+l4eMdwcag+YPXzOCzUdlHZpgkzfEODhanbdF)
+    database: ENC(Nhdev3PWSWmfbcDPNDqXdKHWQMhnVEKs9ijLRAr15ifJJTBQUPZKyTKgj09ApQrMGCE+m2msJFJgYAbk++AdCQ==)
+    username: ENC(iBj0B7k1FyTDueRN4t+Z/pd1SfhuTJf0dV1CbY6nbTGbXkQC+IEr8wfqzXH9CSgp)
+    password: ENC(YV+OVYxPrTaRLU/Pe/pgt6B3NcIAIoroAf9VGOfOY8dCCPNShzqXpV30Da6qcHOI)

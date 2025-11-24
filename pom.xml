@@ -18,57 +18,77 @@
         <module>xiaolin-server</module>
     </modules>
     <properties>
-        <mybatis.spring>2.2.0</mybatis.spring>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
         <lombok>1.18.20</lombok>
         <fastjson>1.2.76</fastjson>
+        <hutool>5.5.7</hutool>
         <commons.lang>2.6</commons.lang>
         <druid>1.2.1</druid>
-        <pagehelper>1.3.0</pagehelper>
         <aliyun.sdk.oss>3.10.2</aliyun.sdk.oss>
         <knife4j>3.0.2</knife4j>
         <aspectj>1.9.4</aspectj>
         <jjwt>0.9.1</jjwt>
         <jaxb-api>2.3.1</jaxb-api>
         <poi>3.16</poi>
+        <ulisesbocchio>3.0.5</ulisesbocchio>
+        <activation>1.1.1</activation>
+        <jaxb-jaxb-runtime>2.3.1</jaxb-jaxb-runtime>
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis.spring}</version>
-            </dependency>
 
+            <!--region mybatis 相关-->
+            <!--mybatis-plus-->
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
-
+            <!--mybatis 注解类-->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <scope>compile</scope>
             </dependency>
-
+            <!--mybatis分页插件-->
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons.lang}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid}</version>
             </dependency>
+            <!--endregion-->
 
+            <!--region 通用工具类-->
+            <!--lombok-->
             <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper}</version>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.lang}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool}</version>
+            </dependency>
+            <!--endRegion-->
 
+            <!--knife4j -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
@@ -80,30 +100,56 @@
                 <artifactId>aspectjrt</artifactId>
                 <version>${aspectj}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj}</version>
             </dependency>
 
+            <!--region jwt-->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.aliyun.oss</groupId>
-                <artifactId>aliyun-sdk-oss</artifactId>
-                <version>${aliyun.sdk.oss}</version>
-            </dependency>
-
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb-api}</version>
             </dependency>
+            <!--endregion-->
+
+            <!-- 阿里 -->
+            <!-- 阿里加解密 -->
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${ulisesbocchio}</version>
+            </dependency>
+            <!--region 阿里云OSS-->
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.sdk.oss}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ini4j</groupId>
+                        <artifactId>ini4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+                <version>${activation}</version>
+            </dependency>
+            <!-- no more than 2.3.3-->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb-jaxb-runtime}</version>
+            </dependency>
+            <!--endregion-->
 
             <!-- poi -->
             <dependency>
