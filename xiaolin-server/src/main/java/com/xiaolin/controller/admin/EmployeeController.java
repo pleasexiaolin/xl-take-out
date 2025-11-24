@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 员工管理
  */
-@RestController
-@RequestMapping("/admin/employee")
 @Slf4j
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/admin/employee")
 public class EmployeeController {
 
     private final EmployeeService employeeService;

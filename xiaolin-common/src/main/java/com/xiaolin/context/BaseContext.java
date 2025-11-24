@@ -2,18 +2,15 @@ package com.xiaolin.context;
 
 public class BaseContext {
 
-    public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+    public static ThreadLocal<String> threadLocal = new ThreadLocal<>();
 
-    public static void setCurrentId(Long id) {
-        threadLocal.set(id);
-    }
+    public static void setCurrentUser(String username) {threadLocal.set(username);}
 
-    public static Long getCurrentId() {
+    public static Object getCurrentUser() {
         return threadLocal.get();
     }
 
-    public static void removeCurrentId() {
+    public static void remove() {
         threadLocal.remove();
     }
-
 }
