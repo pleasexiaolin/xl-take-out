@@ -1,5 +1,7 @@
 package com.xiaolin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("ORDERS")
 public class OrdersDO implements Serializable {
 
     /**
@@ -36,7 +39,7 @@ public class OrdersDO implements Serializable {
     public static final Integer REFUND = 2;
 
     private static final long serialVersionUID = 1L;
-
+    @TableId
     private Long id;
 
     //订单号

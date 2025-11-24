@@ -19,4 +19,22 @@
         from employee
         where username = #{username}
     </select>
+
+    <select id="pageEmp" resultType="com.xiaolin.vo.EmployeeVO">
+        SELECT id,
+               name,
+               username,
+               phone,
+               sex,
+               id_number,
+               status,
+               update_time
+        FROM employee
+        <where>
+            <if test="condition.name != null and condition.name != ''">
+                name LIKE CONCAT('%', #{condition.name}, '%')
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
 </mapper>

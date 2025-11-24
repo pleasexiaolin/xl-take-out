@@ -1,5 +1,7 @@
 package com.xiaolin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xiaolin.pojo.BaseDO;
 import lombok.*;
 
@@ -10,10 +12,11 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("CATEGORY")
 public class CategoryDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId
     private Long id;
 
     //类型: 1菜品分类 2套餐分类

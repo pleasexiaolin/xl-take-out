@@ -18,7 +18,7 @@
         <module>xiaolin-server</module>
     </modules>
     <properties>
-        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <lombok>1.18.20</lombok>
         <fastjson>1.2.76</fastjson>
         <hutool>5.5.7</hutool>
@@ -52,11 +52,11 @@
                 <scope>compile</scope>
             </dependency>
             <!--mybatis分页插件-->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-jsqlparser</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus-jsqlparser</artifactId>-->
+<!--                <version>${mybatis-plus.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>

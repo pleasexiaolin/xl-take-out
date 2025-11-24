@@ -1,5 +1,7 @@
 package com.xiaolin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.xiaolin.pojo.BaseDO;
 import lombok.*;
 
@@ -14,10 +16,11 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Setmeal extends BaseDO implements Serializable {
+@TableName("SETMEAL")
+public class SetmealDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId
     private Long id;
 
     //分类id

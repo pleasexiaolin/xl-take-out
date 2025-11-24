@@ -13,17 +13,17 @@ public class PageQuery {
     /**
      * 每页条数
      */
-    private Integer limit;
+    private Integer pageSize;
     /**
      * 当前页面
      */
     private Integer page;
 
     public Integer getLimit() {
-        if (Objects.isNull(limit)) {
+        if (Objects.isNull(pageSize)) {
             return 10;
         }
-        return limit;
+        return pageSize;
     }
 
     public Integer getPage() {

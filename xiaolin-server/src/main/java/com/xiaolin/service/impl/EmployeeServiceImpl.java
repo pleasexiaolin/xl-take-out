@@ -1,9 +1,11 @@
 package com.xiaolin.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaolin.constant.JwtClaimsConstant;
 import com.xiaolin.constant.MessageConstant;
 import com.xiaolin.constant.StatusConstant;
+import com.xiaolin.dto.EmployeeDTO;
 import com.xiaolin.dto.EmployeeLoginDTO;
 import com.xiaolin.entity.EmployeeDO;
 import com.xiaolin.exception.AccountLockedException;
@@ -11,9 +13,12 @@ import com.xiaolin.exception.AccountNotFoundException;
 import com.xiaolin.exception.PasswordErrorException;
 import com.xiaolin.mapper.EmployeeMapper;
 import com.xiaolin.properties.JwtProperties;
+import com.xiaolin.query.EmployeeQuery;
+import com.xiaolin.result.Result;
 import com.xiaolin.service.EmployeeService;
 import com.xiaolin.utils.JwtUtil;
 import com.xiaolin.vo.EmployeeLoginVO;
+import com.xiaolin.vo.EmployeeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -71,6 +76,25 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
                 .name(employee.getName())
                 .token(token)
                 .build();
+    }
+
+    @Override
+    public Result<Integer> save(EmployeeDTO form) {
+        // 幂等校验
+        EmployeeDO employee = baseMapper.getByUsername(form.getUsername());
+        if (employee != null) {
+            // 已经存在
+            return Result.error("用户名已存在");
+        }
+
+        return Result.success(baseMapper.insert(new EmployeeDO(form)));
+    }
+
+    @Override
+    public Page<EmployeeVO> pageEmp(EmployeeQuery condition, Page<EmployeeVO> page) {
+        Page<EmployeeVO> employeeVOPage = baseMapper.pageEmp(condition, page);
+        System.out.println("total:" + employeeVOPage.getTotal());
+        return employeeVOPage;
     }
 
 }

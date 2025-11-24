@@ -1,5 +1,7 @@
 package com.xiaolin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,10 +18,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("SHOPPING_CART")
 public class ShoppingCartDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId
     private Long id;
 
     //名称

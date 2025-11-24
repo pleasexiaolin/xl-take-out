@@ -15,7 +15,7 @@ public class BaseDO {
      * 创建者
      */
     @TableField(fill = FieldFill.INSERT)
-    private String creater;
+    private String createUser;
     /**
      * 创建时间
      */
@@ -25,7 +25,7 @@ public class BaseDO {
      * 更新者
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String updater;
+    private String updateUser;
     /**
      * 更新时间
      */
@@ -33,8 +33,8 @@ public class BaseDO {
     private Date updateTime;
 
     public BaseDO() {
-        this.creater = BaseContext.getCurrentUser();
-        this.updater = BaseContext.getCurrentUser();
+        this.createUser = BaseContext.getCurrentUser();
+        this.updateUser = BaseContext.getCurrentUser();
         this.createTime = new Date();
         this.updateTime = new Date();
     }
