@@ -1,6 +1,6 @@
 package com.xiaolin.dto;
 
-import com.xiaolin.entity.SetmealDish;
+import com.xiaolin.entity.SetmealDishDO;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -31,6 +31,6 @@ public class SetmealDTO implements Serializable {
     private String image;
 
     //套餐菜品关系
-    private List<SetmealDish> setmealDishes = new ArrayList<>();
+    private List<SetmealDishDO> setmealDishes = new ArrayList<>();
 
 }

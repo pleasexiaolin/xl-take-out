@@ -11,6 +11,11 @@
     <artifactId>xiaolin-pojo</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.xiaolin</groupId>
+            <artifactId>xiaolin-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>

@@ -1,6 +1,6 @@
 package com.xiaolin.vo;
 
-import com.xiaolin.entity.SetmealDish;
+import com.xiaolin.entity.SetmealDishDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,5 +44,5 @@ public class SetmealVO implements Serializable {
     private String categoryName;
 
     //套餐和菜品的关联关系
-    private List<SetmealDish> setmealDishes = new ArrayList<>();
+    private List<SetmealDishDO> setmealDishes = new ArrayList<>();
 }

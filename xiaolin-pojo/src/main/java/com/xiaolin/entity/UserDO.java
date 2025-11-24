@@ -12,34 +12,30 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee implements Serializable {
+public class UserDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String username;
+    //微信用户唯一标识
+    private String openid;
 
+    //姓名
     private String name;
 
-    private String password;
-
+    //手机号
     private String phone;
 
+    //性别 0 女 1 男
     private String sex;
 
+    //身份证号
     private String idNumber;
 
-    private Integer status;
+    //头像
+    private String avatar;
 
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //注册时间
     private LocalDateTime createTime;
-
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
-
-    private Long createUser;
-
-    private Long updateUser;
-
 }

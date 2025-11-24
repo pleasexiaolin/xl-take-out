@@ -1,21 +1,20 @@
 package com.xiaolin.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.xiaolin.pojo.BaseDO;
+import lombok.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * 套餐
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Setmeal implements Serializable {
+public class Setmeal extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,12 +37,4 @@ public class Setmeal implements Serializable {
 
     //图片
     private String image;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
-    private Long createUser;
-
-    private Long updateUser;
 }

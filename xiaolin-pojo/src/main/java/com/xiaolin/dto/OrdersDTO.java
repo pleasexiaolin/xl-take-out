@@ -1,6 +1,6 @@
 package com.xiaolin.dto;
 
-import com.xiaolin.entity.OrderDetail;
+import com.xiaolin.entity.OrderDetailDO;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -51,6 +51,6 @@ public class OrdersDTO implements Serializable {
     //收货人
     private String consignee;
 
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailDO> orderDetails;
 
 }

@@ -6,7 +6,7 @@ public class BaseContext {
 
     public static void setCurrentUser(String username) {threadLocal.set(username);}
 
-    public static Object getCurrentUser() {
+    public static String getCurrentUser() {
         return threadLocal.get();
     }
 

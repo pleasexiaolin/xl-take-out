@@ -1,17 +1,16 @@
 package com.xiaolin.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.xiaolin.pojo.BaseDO;
+import lombok.*;
 
+import java.io.Serializable;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category implements Serializable {
+public class CategoryDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,16 +27,4 @@ public class Category implements Serializable {
 
     //分类状态 0标识禁用 1表示启用
     private Integer status;
-
-    //创建时间
-    private LocalDateTime createTime;
-
-    //更新时间
-    private LocalDateTime updateTime;
-
-    //创建人
-    private Long createUser;
-
-    //修改人
-    private Long updateUser;
 }

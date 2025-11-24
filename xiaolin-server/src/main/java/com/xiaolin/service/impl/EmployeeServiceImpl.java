@@ -5,7 +5,7 @@ import com.xiaolin.constant.JwtClaimsConstant;
 import com.xiaolin.constant.MessageConstant;
 import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.dto.EmployeeLoginDTO;
-import com.xiaolin.entity.Employee;
+import com.xiaolin.entity.EmployeeDO;
 import com.xiaolin.exception.AccountLockedException;
 import com.xiaolin.exception.AccountNotFoundException;
 import com.xiaolin.exception.PasswordErrorException;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
+public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO> implements EmployeeService {
 
     private final JwtProperties jwtProperties;
 
@@ -35,7 +35,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         String password = employeeLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
-        Employee employee = baseMapper.getByUsername(username);
+        EmployeeDO employee = baseMapper.getByUsername(username);
 
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
         if (employee == null) {

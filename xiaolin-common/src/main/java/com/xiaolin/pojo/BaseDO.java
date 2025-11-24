@@ -2,21 +2,15 @@ package com.xiaolin.pojo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.yjj.ypzfyth.business.login.pojo.LoginUser;
+import com.xiaolin.context.BaseContext;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.Objects;
 
-/**
- * @author lpf
- * @date Create in 2021/11/01 17:11
- */
 @Setter
 @Getter
 public class BaseDO {
-
     /**
      * 创建者
      */
@@ -37,20 +31,10 @@ public class BaseDO {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-    /**
-     * 删除标识 00 未删除 01 已删除
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private String deleteFlag;
 
     public BaseDO() {
-    }
-
-    public BaseDO(LoginUser loginUser) {
-        if (Objects.nonNull(loginUser)) {
-            this.creater = loginUser.getUserId();
-            this.updater = loginUser.getUserId();
-        }
+        this.creater = BaseContext.getCurrentUser();
+        this.updater = BaseContext.getCurrentUser();
         this.createTime = new Date();
         this.updateTime = new Date();
     }
