@@ -15,4 +15,13 @@
         from setmeal_dish
         where setmeal_id = #{setmealId}
     </delete>
+
+    <select id="selectBatchByDishId" resultType="com.xiaolin.entity.SetmealDishDO">
+        select id, setmeal_id, dish_id, name, price, copies
+        from setmeal_dish
+        where dish_id in
+        <foreach item="dishId" collection="dishIds" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </select>
 </mapper>

@@ -8,7 +8,9 @@ import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.DishDTO;
 import com.xiaolin.entity.DishDO;
 import com.xiaolin.entity.DishFlavorDO;
+import com.xiaolin.entity.SetmealDishDO;
 import com.xiaolin.mapper.DishMapper;
+import com.xiaolin.mapper.SetmealDishMapper;
 import com.xiaolin.query.DishPageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.DishFlavorService;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements DishService {
 
     private final DishFlavorService dishFlavorService;
+    private final SetmealDishMapper setmealDishMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -150,8 +153,24 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
             return Result.error("启售状态下无法删除！");
         }
 
-        // todo 套餐关联菜品不能删
+        // 套餐关联菜品不能删
+        List<SetmealDishDO> setmealDishDOList = setmealDishMapper.selectBatchByDishId(dishIds);
 
+        // 获取关联套餐的菜品ID集合
+        List<Long> relatedDishIds = setmealDishDOList.stream()
+                .map(SetmealDishDO::getDishId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 从可删除列表中移除关联套餐的菜品
+        dishIds = dishIds.stream()
+                .filter(id -> !relatedDishIds.contains(id))
+                .collect(Collectors.toList());
+
+        // 如果没有可删除的菜品，返回错误提示
+        if (CollectionUtil.isEmpty(dishIds)) {
+            return Result.error("没有可删除的菜品，菜品未禁用或者关联了套餐！");
+        }
 
         // 删除菜品口味
         dishFlavorService.batchRemove(dishIds);

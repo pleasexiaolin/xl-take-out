@@ -17,5 +17,7 @@ public interface SetmealDishMapper extends BaseMapper<SetmealDishDO> {
 
     void batchDeleteBySetmealId(@Param("setmealIds") List<Long> setmealIds);
 
-    void deleteBySetmealId(@Param("setmealId")Long setmealId);
+    void deleteBySetmealId(@Param("setmealId") Long setmealId);
+
+    List<SetmealDishDO> selectBatchByDishId(@Param("dishIds") List<Long> dishIds);
 }
