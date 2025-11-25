@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xiaolin.mapper.DishMapper">
-    <select id="page" resultType="com.xiaolin.vo.DishVO">
+<mapper namespace="com.xiaolin.mapper.SetmealMapper">
+    <select id="page" resultType="com.xiaolin.vo.SetmealVO">
         SELECT a.id,
                a.name,
                a.category_id,
@@ -12,7 +12,7 @@
                a.status,
                a.update_time,
                b.name AS categoryName
-        FROM dish a
+        FROM setmeal a
                  LEFT JOIN category b ON a.category_id = b.id
         <where>
             <if test="condition.name != null and condition.name != ''">
@@ -28,7 +28,7 @@
         ORDER BY update_time DESC
     </select>
 
-    <select id="getById" resultType="com.xiaolin.vo.DishVO">
+    <select id="getById" resultType="com.xiaolin.vo.SetmealVO">
         SELECT a.id,
                a.name,
                a.category_id,
@@ -38,12 +38,12 @@
                a.status,
                a.update_time,
                b.name AS categoryName
-        FROM dish a
+        FROM setmeal a
                  LEFT JOIN category b ON a.category_id = b.id
         where a.id = #{id}
     </select>
 
-    <select id="getListByCategoryId" resultType="com.xiaolin.vo.DishVO">
+    <select id="getListByCategoryId" resultType="com.xiaolin.vo.SetmealVO">
         SELECT a.id,
                a.name,
                a.category_id,
@@ -53,13 +53,13 @@
                a.status,
                a.update_time,
                b.name AS categoryName
-        FROM dish a
+        FROM setmeal a
                  LEFT JOIN category b ON a.category_id = b.id
         where a.category_id = #{categoryId}
     </select>
 
     <update id="changeStatus">
-        UPDATE dish
+        UPDATE setmeal
         SET status      = #{status},
             update_time = #{time},
             update_user = #{updateUser}
@@ -93,7 +93,7 @@
         where id = #{form.id}
     </update>
 
-    <select id="getByName" resultType="com.xiaolin.entity.DishDO">
+    <select id="getByName" resultType="com.xiaolin.entity.SetmealDO">
         SELECT id,
                name,
                category_id,
@@ -101,8 +101,13 @@
                image,
                description,
                status
-        FROM dish
+        FROM setmeal
         WHERE name = #{name}
     </select>
 
+    <select id="getSetmealDishById" resultType="com.xiaolin.entity.SetmealDishDO">
+        select id, setmeal_id, dish_id, name, price, copies
+        from setmeal_dish
+        where setmeal_id = #{setmealId}
+    </select>
 </mapper>

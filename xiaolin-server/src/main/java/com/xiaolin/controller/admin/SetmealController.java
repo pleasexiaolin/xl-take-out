@@ -1,28 +1,26 @@
 package com.xiaolin.controller.admin;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.xiaolin.dto.DishDTO;
-import com.xiaolin.query.DishPageQuery;
+import com.xiaolin.dto.SetmealDTO;
+import com.xiaolin.query.SetmealPageQuery;
 import com.xiaolin.result.Result;
-import com.xiaolin.service.DishService;
-import com.xiaolin.vo.DishVO;
+import com.xiaolin.service.SetmealService;
+import com.xiaolin.vo.SetmealVO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author lzh
- * @description: 菜品控制器
- * @date 2025/11/25 15:52
+ * @description: 套餐管理
+ * @date 2025/11/25 20:21
  */
 @RestController
-@RequestMapping("/admin/dish")
+@RequestMapping("/admin/setmeal")
 @RequiredArgsConstructor
-public class DishController {
+public class SetmealController {
 
-    private final DishService dishService;
+    private final SetmealService setmealService;
 
     /**
      * 新增
@@ -30,22 +28,21 @@ public class DishController {
      * @return
      */
     @PostMapping
-    public Result<Integer> save(@RequestBody DishDTO form){
+    public Result<Integer> save(@RequestBody SetmealDTO form){
         if (StringUtils.isAnyEmpty(form.getName())) {
             return Result.error("菜品名称不能为空！");
         }
-        return dishService.save(form);
+        return setmealService.save(form);
     }
 
     /**
      * 分页
-     *
      * @param condition
      * @return
      */
     @GetMapping("/page")
-    public Result<Page<DishVO>> page(DishPageQuery condition) {
-        return Result.success(dishService.page(condition, new Page<>(condition.getPage(), condition.getLimit())));
+    public Result<Page<SetmealVO>> page(SetmealPageQuery condition) {
+        return Result.success(setmealService.page(condition, new Page<>(condition.getPage(), condition.getLimit())));
     }
 
     /**
@@ -55,28 +52,12 @@ public class DishController {
      * @return
      */
     @GetMapping("/{id}")
-    public Result<DishVO> info(@PathVariable Long id) {
+    public Result<SetmealVO> info(@PathVariable Long id) {
         if (id == null) {
             return Result.error("id不能为空！");
         }
-        return dishService.info(id);
+        return setmealService.info(id);
     }
-
-    /**
-     * 菜品分类
-     *
-     * @param categoryId
-     * @return
-     */
-    @GetMapping("/list")
-    public Result<List<DishVO>> list(Long categoryId) {
-        if (categoryId == null) {
-            return Result.error("分类id不能为空！");
-        }
-        return dishService.list(categoryId);
-    }
-
-
     /**
      * 启用、禁用
      * @param status
@@ -88,7 +69,7 @@ public class DishController {
         if (status == null || id == null) {
             return Result.error("状态或id不能为空！");
         }
-        return dishService.changeStatus(status, id);
+        return setmealService.changeStatus(status, id);
     }
 
     /**
@@ -97,11 +78,11 @@ public class DishController {
      * @return
      */
     @PutMapping
-    public Result<Integer> update(@RequestBody DishDTO form){
+    public Result<Integer> update(@RequestBody SetmealDTO form){
         if (form.getId() == null) {
             return Result.error("状态或id不能为空！");
         }
-        return dishService.update(form);
+        return setmealService.update(form);
     }
 
     /**
@@ -114,7 +95,6 @@ public class DishController {
         if (ids == null || ids.trim().isEmpty()) {
             return Result.error("请选择要删除的数据");
         }
-        return dishService.batchRemove(ids);
+        return setmealService.batchRemove(ids);
     }
-
 }

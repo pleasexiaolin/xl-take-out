@@ -1,7 +1,9 @@
 package com.xiaolin.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.DishDTO;
 import com.xiaolin.entity.DishDO;
@@ -11,6 +13,7 @@ import com.xiaolin.query.DishPageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.DishFlavorService;
 import com.xiaolin.service.DishService;
+import com.xiaolin.utils.StringUtils;
 import com.xiaolin.vo.DishFlavorVO;
 import com.xiaolin.vo.DishVO;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +42,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
     public Result<Integer> save(DishDTO form) {
         // 幂等判断
         DishDO info = baseMapper.getByName(form.getName());
-        if (info!=null && info.getName().equals(form.getName())){
+        if (info != null && info.getName().equals(form.getName())) {
             return Result.error("菜品名字重复，换个名字吧。");
         }
 
@@ -115,7 +117,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         // 幂等判断
         DishDO info = baseMapper.getByName(form.getName());
         if (info != null && !info.getName().equals(form.getName())) {
-            return Result.error("改菜品名称已存在，请修改后重试！");
+            return Result.error("该菜品名称已存在，请修改后重试！");
         }
 
         // 修改菜品
@@ -135,31 +137,33 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Integer> batchRemove(String ids) {
+        // 解析ids转为List<Long> idsList
+        List<Long> dishIds = StringUtils.streamIds(ids);
+
+        // 启售状态不能删
+        dishIds = baseMapper.selectBatchIds(dishIds).stream()
+                .filter(item -> StatusConstant.DISABLE.equals(item.getStatus()))
+                .map(DishDO::getId)
+                .collect(Collectors.toList());
+
+        if (CollectionUtil.isEmpty(dishIds)) {
+            return Result.error("启售状态下无法删除！");
+        }
+
+        // todo 套餐关联菜品不能删
+
+
+        // 删除菜品口味
+        dishFlavorService.batchRemove(dishIds);
+
         try {
-            // 解析ids转为List<Long> idsList
-            List<Long> dishIds = Arrays.stream(ids.split(","))
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .map(Long::valueOf)
-                    .collect(Collectors.toList());
-
-            // 删除菜品口味
-            dishFlavorService.batchRemove(dishIds);
-
             // 执行批量删除
-            boolean removed = super.removeByIds(dishIds);
-            if (removed) {
-                return Result.success();
-            } else {
-                return Result.error("删除失败");
-            }
-
-        } catch (NumberFormatException e) {
-            log.error("ID格式错误: {}", e.getMessage());
-            return Result.error("数据格式错误");
+            super.removeByIds(dishIds);
         } catch (Exception e) {
             log.error("批量删除菜品失败: {}", e.getMessage());
             return Result.error("系统异常，请稍后重试");
         }
+
+        return Result.success();
     }
 }

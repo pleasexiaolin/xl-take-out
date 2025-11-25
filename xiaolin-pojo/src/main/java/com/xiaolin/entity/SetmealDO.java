@@ -2,6 +2,8 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.constant.StatusConstant;
+import com.xiaolin.dto.SetmealDTO;
 import com.xiaolin.pojo.BaseDO;
 import lombok.*;
 
@@ -40,4 +42,13 @@ public class SetmealDO extends BaseDO implements Serializable {
 
     //图片
     private String image;
+
+    public SetmealDO(SetmealDTO form) {
+        this.name = form.getName();
+        this.categoryId = form.getCategoryId();
+        this.price = form.getPrice();
+        this.image = form.getImage();
+        this.description = form.getDescription();
+        this.status = StatusConstant.DISABLE;
+    }
 }

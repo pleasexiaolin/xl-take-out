@@ -2,6 +2,7 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.dto.SetmealDishDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,4 +39,12 @@ public class SetmealDishDO implements Serializable {
 
     //份数
     private Integer copies;
+
+    public SetmealDishDO(SetmealDishDTO form, Long setmealId) {
+        this.setmealId = setmealId;
+        this.dishId = form.getDishId();
+        this.name = form.getName();
+        this.price = form.getPrice();
+        this.copies = form.getCopies();
+    }
 }
