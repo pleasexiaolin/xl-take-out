@@ -11,7 +11,7 @@
     <update id="changeStatus">
         UPDATE category
         SET status      = #{status},
-            update_time = now(),
+            update_time = #{time},
             update_user = #{updateUser}
         WHERE id = #{id}
     </update>
@@ -48,7 +48,7 @@
     <update id="updateById">
         UPDATE category
         <set>
-            update_time = now(),
+            update_time = #{time},
             update_user = #{updateUser},
             <if test="entity.name != null and entity.name != ''">
                 name = #{entity.name}

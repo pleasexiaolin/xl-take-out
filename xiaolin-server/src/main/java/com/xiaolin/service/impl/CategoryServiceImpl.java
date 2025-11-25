@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryDO>
     @Override
     public Result<Integer> changeStatus(Integer status, Long id) {
         try {
-            baseMapper.changeStatus(status, id, BaseContext.getCurrentUser());
+            baseMapper.changeStatus(status, id, BaseContext.getCurrentUser(), LocalDateTime.now());
         } catch (Exception e) {
             log.error("修改分类状态失败，message：{}", e.getMessage());
             return Result.error("系统异常，请稍后重试。");
@@ -86,7 +87,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryDO>
         }
 
         try {
-            baseMapper.updateById(form, BaseContext.getCurrentUser());
+            baseMapper.updateById(form, BaseContext.getCurrentUser(), LocalDateTime.now());
         } catch (Exception e) {
             log.error("更新分类失败，message：{}", e.getMessage());
             return Result.error("系统异常，请稍后重试。");
