@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("USER")
+@TableName("user")
 public class UserDO implements Serializable {
 
     private static final long serialVersionUID = 1L;

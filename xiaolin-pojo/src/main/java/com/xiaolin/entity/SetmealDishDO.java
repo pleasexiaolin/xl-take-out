@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("SETMEAL_DISH")
+@TableName("setmeal_dish")
 public class SetmealDishDO implements Serializable {
 
     private static final long serialVersionUID = 1L;

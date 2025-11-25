@@ -8,14 +8,18 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author lzh
- * @description: 员工分页参数
- * @date 2025/11/24 20:54
+ * @description: 分类分页查询
+ * @date 2025/11/25 8:58
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeQuery extends PageQuery {
-    // 员工姓名
+public class CategoryPageQuery extends PageQuery {
+
+    //类型 1 菜品分类 2 套餐分类
+    private Integer type;
+
+    //分类名称
     private String name;
 }

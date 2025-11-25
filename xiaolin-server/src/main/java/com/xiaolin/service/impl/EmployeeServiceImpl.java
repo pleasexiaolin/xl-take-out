@@ -13,7 +13,7 @@ import com.xiaolin.exception.AccountNotFoundException;
 import com.xiaolin.exception.PasswordErrorException;
 import com.xiaolin.mapper.EmployeeMapper;
 import com.xiaolin.properties.JwtProperties;
-import com.xiaolin.query.EmployeeQuery;
+import com.xiaolin.query.EmployeePageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.EmployeeService;
 import com.xiaolin.utils.JwtUtil;
@@ -91,7 +91,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
     }
 
     @Override
-    public Page<EmployeeVO> pageEmp(EmployeeQuery condition, Page<EmployeeVO> page) {
+    public Page<EmployeeVO> pageEmp(EmployeePageQuery condition, Page<EmployeeVO> page) {
         Page<EmployeeVO> employeeVOPage = baseMapper.pageEmp(condition, page);
         System.out.println("total:" + employeeVOPage.getTotal());
         return employeeVOPage;

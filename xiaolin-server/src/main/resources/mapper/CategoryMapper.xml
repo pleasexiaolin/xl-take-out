@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaolin.mapper.CategoryMapper">
+    <select id="getByName" resultType="com.xiaolin.entity.CategoryDO">
+        SELECT id, type, name, sort, status
+        FROM category
+        WHERE name = #{name}
+    </select>
+
+    <update id="changeStatus">
+        UPDATE category
+        SET status      = #{status},
+            update_time = now(),
+            update_user = #{updateUser}
+        WHERE id = #{id}
+    </update>
+
+    <select id="info" resultType="com.xiaolin.vo.CategoryVO">
+        SELECT id, type, name, sort, status, update_time
+        FROM category
+        WHERE id = #{id}
+    </select>
+
+    <select id="page" resultType="com.xiaolin.vo.CategoryVO">
+        SELECT id, type, name, sort, status, update_time
+        FROM category
+        <where>
+            <if test="condition.type != null">
+                type = #{condition.type}
+            </if>
+            <if test="condition.name != null and condition.name != ''">
+                AND name LIKE CONCAT('%' #{condition.name} '%')
+            </if>
+        </where>
+        ORDER BY sort, update_time DESC
+    </select>
+
+    <select id="listByType" resultType="com.xiaolin.vo.CategoryVO">
+        SELECT id, type, name, sort, status, update_time
+        FROM category
+        <where>
+            type = #{type}
+        </where>
+        ORDER BY sort, update_time DESC
+    </select>
+
+    <update id="updateById">
+        UPDATE category
+        <set>
+            update_time = now(),
+            update_user = #{updateUser},
+            <if test="entity.name != null and entity.name != ''">
+                name = #{entity.name}
+            </if>
+            <if test="entity.sort != null">
+                ,sort = #{entity.sort}
+            </if>
+        </set>
+        WHERE id = #{entity.id}
+    </update>
+</mapper>

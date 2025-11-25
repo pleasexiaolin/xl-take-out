@@ -26,6 +26,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto  # 使用数据库自增
 xl:
   jwt:
     # 设置jwt签名加密时使用的秘钥

@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("DISH_FLAVOR")
+@TableName("dish_flavor")
 public class DishFlavorDO implements Serializable {
 
     private static final long serialVersionUID = 1L;

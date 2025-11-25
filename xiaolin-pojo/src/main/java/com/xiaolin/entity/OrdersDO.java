@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("ORDERS")
+@TableName("orders")
 public class OrdersDO implements Serializable {
 
     /**

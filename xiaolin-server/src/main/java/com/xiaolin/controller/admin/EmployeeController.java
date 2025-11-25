@@ -3,7 +3,7 @@ package com.xiaolin.controller.admin;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaolin.dto.EmployeeDTO;
 import com.xiaolin.dto.EmployeeLoginDTO;
-import com.xiaolin.query.EmployeeQuery;
+import com.xiaolin.query.EmployeePageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.EmployeeService;
 import com.xiaolin.vo.EmployeeLoginVO;
@@ -70,7 +70,7 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/page")
-    public Result<Page<EmployeeVO>> page(EmployeeQuery condition) {
+    public Result<Page<EmployeeVO>> page(EmployeePageQuery condition) {
         return Result.success(employeeService.pageEmp(condition, new Page<>(condition.getPage(), condition.getLimit())));
     }
 }
