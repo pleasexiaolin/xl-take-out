@@ -1,10 +1,11 @@
 package com.xiaolin.vo;
 
-import com.xiaolin.entity.DishFlavorDO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,11 +32,12 @@ public class DishVO implements Serializable {
     //0 停售 1 起售
     private Integer status;
     //更新时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private LocalDateTime updateTime;
     //分类名称
     private String categoryName;
     //菜品关联的口味
-    private List<DishFlavorDO> flavors = new ArrayList<>();
+    private List<DishFlavorVO> flavors = new ArrayList<>();
 
     //private Integer copies;
 }

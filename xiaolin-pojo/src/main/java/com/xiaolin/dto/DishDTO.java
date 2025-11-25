@@ -1,7 +1,7 @@
 package com.xiaolin.dto;
 
-import com.xiaolin.entity.DishFlavorDO;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,6 +24,6 @@ public class DishDTO implements Serializable {
     //0 停售 1 起售
     private Integer status;
     //口味
-    private List<DishFlavorDO> flavors = new ArrayList<>();
+    private List<DishFlavorDTO> flavors = new ArrayList<>();
 
 }

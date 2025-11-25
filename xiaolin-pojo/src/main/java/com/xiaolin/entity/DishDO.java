@@ -2,6 +2,8 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.constant.StatusConstant;
+import com.xiaolin.dto.DishDTO;
 import com.xiaolin.pojo.BaseDO;
 import lombok.*;
 
@@ -40,4 +42,13 @@ public class DishDO extends BaseDO implements Serializable {
 
     //0 停售 1 起售
     private Integer status;
+
+    public DishDO(DishDTO form) {
+        this.name = form.getName();
+        this.categoryId = form.getCategoryId();
+        this.price = form.getPrice();
+        this.image = form.getImage();
+        this.description = form.getDescription();
+        this.status = StatusConstant.DISABLE;
+    }
 }
