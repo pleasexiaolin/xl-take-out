@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/shop")
 @RestController
 @RequiredArgsConstructor
-public class ShopController {
+public class ShopAdminController {
 
     public final RedisTemplate<String, Object> redisTemplate;
 

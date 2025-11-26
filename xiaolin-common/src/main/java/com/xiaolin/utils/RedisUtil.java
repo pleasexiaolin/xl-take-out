@@ -34,12 +34,12 @@ public class RedisUtil {
     @Value("${redis.defaultExpire:86400}")
     public long defaultExpire;
 
-    private  final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * Redis的根操作路径
      */
-    @Value("${redis.root:SJZX}")
+    @Value("${redis.root:xiaolin}")
     private String category;
 
     public RedisUtil setCategory(String category) {

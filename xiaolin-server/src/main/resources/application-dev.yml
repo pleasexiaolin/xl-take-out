@@ -15,3 +15,6 @@ xl:
     password: ENC(YV+OVYxPrTaRLU/Pe/pgt6B3NcIAIoroAf9VGOfOY8dCCPNShzqXpV30Da6qcHOI)
     database: 10
     default-expire: 86400
+  wechat:
+    appid: xxx
+    secret: xxx

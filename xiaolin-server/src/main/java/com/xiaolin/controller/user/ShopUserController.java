@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @description: 用户端营业状态控制器
  * @date 2025/11/26 16:15
  */
-@RestController("userShopController")
+@RestController
 @RequestMapping("/user/shop")
 @RequiredArgsConstructor
-public class ShopController {
+public class ShopUserController {
 
     public final RedisTemplate<String, Object> redisTemplate;
 
