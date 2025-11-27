@@ -9,32 +9,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 管理端jwt令牌校验的拦截器
+ * 用户端 jwt令牌校验的拦截器
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtTokenAdminInterceptor implements HandlerInterceptor {
+public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
     private final JwtProperties jwtProperties;
 
-    /**
-     * 校验jwt
-     *
-     * @param request
-     * @param response
-     * @param handler
-     * @return
-     * @throws Exception
-     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断当前拦截到的是Controller的方法还是其他资源
@@ -44,7 +35,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         }
 
         //1、从请求头中获取令牌
-        String token = request.getHeader(jwtProperties.getAdminTokenName());
+        String token = request.getHeader(jwtProperties.getUserTokenName());
 
         if (StringUtils.isEmpty(token)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -55,11 +46,12 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            String username = claims.get(JwtClaimsConstant.USERNAME).toString();
-            log.info("当前员工id：{}，用户名：{}", empId, username);
+            String userId = claims.get(JwtClaimsConstant.USER_ID).toString();
+            String name = claims.get(JwtClaimsConstant.NAME).toString();
+            log.info("当前用户id：{}，用户名：{}", userId, name);
 
-            BaseContext.setCurrentUser(username);
+            // name 可能是空 所以展示把 userId 存到线程中
+            BaseContext.setCurrentUser(userId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {

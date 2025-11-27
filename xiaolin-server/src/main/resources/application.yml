@@ -55,6 +55,7 @@ xl:
   wechat:
     appid: ${xl.wechat.appid}
     secret: ${xl.wechat.secret}
+    login-url: https://api.weixin.qq.com/sns/jscode2session
 
 jasypt:
   encryptor:

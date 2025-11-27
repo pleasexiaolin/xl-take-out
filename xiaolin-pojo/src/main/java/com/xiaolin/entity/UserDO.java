@@ -41,4 +41,9 @@ public class UserDO implements Serializable {
 
     //注册时间
     private LocalDateTime createTime;
+
+    public UserDO(String openid) {
+        this.openid = openid;
+        createTime = LocalDateTime.now();
+    }
 }

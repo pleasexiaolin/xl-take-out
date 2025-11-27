@@ -1,14 +1,18 @@
 package com.xiaolin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaolin.constant.JwtClaimsConstant;
+import com.xiaolin.constant.MessageConstant;
 import com.xiaolin.dto.UserLoginDTO;
 import com.xiaolin.entity.UserDO;
+import com.xiaolin.exception.LoginFailedException;
 import com.xiaolin.mapper.UserMapper;
 import com.xiaolin.properties.JwtProperties;
 import com.xiaolin.properties.WeChatProperties;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.UserService;
+import com.xiaolin.utils.HttpClientUtil;
 import com.xiaolin.utils.JwtUtil;
 import com.xiaolin.vo.UserLoginVO;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +34,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     private final JwtProperties jwtProperties;
 
-    //微信服务接口地址
-    public static final String WX_LOGIN = "https://api.weixin.qq.com/sns/jscode2session";
-
     private final WeChatProperties weChatProperties;
 
     @Override
     public Result<UserLoginVO> login(UserLoginDTO form) {
-        // todo 待完善登录
-        UserDO userDO = this.wxLogin(form);//后绪步骤实现
+        // 微信登录
+        UserDO userDO = this.wxLogin(form);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, userDO.getId());
@@ -49,9 +50,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     private UserDO wxLogin(UserLoginDTO form) {
+        String openid = getOpenid(form.getCode());
+        //判断openid是否为空，如果为空表示登录失败，抛出业务异常
+        if (openid == null) {
+            throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
+        }
 
-        return null;
+        //判断当前用户是否为新用户
+        UserDO user = baseMapper.getByOpenid(openid);
+        if (user == null) {
+            user = new UserDO(openid);
+            baseMapper.insert(user);
+        }
+
+        return user;
     }
 
+    //调用微信接口服务，获得当前微信用户的openid
+    private String getOpenid(String code) {
+        Map<String, String> map = new HashMap<>();
+        map.put("appid", weChatProperties.getAppid());
+        map.put("secret", weChatProperties.getSecret());
+        map.put("js_code", code);
+        map.put("grant_type", "authorization_code");
+        String json = HttpClientUtil.doGet(weChatProperties.getLoginUrl(), map);
 
+        return JSON.parseObject(json).getString("openid");
+    }
 }
