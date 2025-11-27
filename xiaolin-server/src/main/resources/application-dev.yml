@@ -1,8 +1,20 @@
 xl:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: ENC(f3Sjo1LUE+A25lr42fBTxKSNAKcwMxmlA1NEdvDVmR1uNg9HqrINHfY3PJcjG4kL)
+    host: ENC(/w7zL/BBI69mf0uZ6pT4ystf5LZqD/nZ6oTQyH+KjB2iq47eA0UzzquqzTj2OkJv)
     port: ENC(BO+/M+WIlc7YWsp2F9qCV0KXgLz+l4eMdwcag+YPXzOCzUdlHZpgkzfEODhanbdF)
     database: ENC(Nhdev3PWSWmfbcDPNDqXdKHWQMhnVEKs9ijLRAr15ifJJTBQUPZKyTKgj09ApQrMGCE+m2msJFJgYAbk++AdCQ==)
     username: ENC(iBj0B7k1FyTDueRN4t+Z/pd1SfhuTJf0dV1CbY6nbTGbXkQC+IEr8wfqzXH9CSgp)
     password: ENC(YV+OVYxPrTaRLU/Pe/pgt6B3NcIAIoroAf9VGOfOY8dCCPNShzqXpV30Da6qcHOI)
+  alioss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    bucket-name: aliyun-xiaolin
+  redis:
+    host: ENC(/w7zL/BBI69mf0uZ6pT4ystf5LZqD/nZ6oTQyH+KjB2iq47eA0UzzquqzTj2OkJv)
+    port: ENC(gG0XtAQIiibbCMm3lQueBeXHFrXCtpEaunYZOHyawubNEjYHJ8B0Rwr3gD+n7hZU)
+    password: ENC(YV+OVYxPrTaRLU/Pe/pgt6B3NcIAIoroAf9VGOfOY8dCCPNShzqXpV30Da6qcHOI)
+    database: 10
+    default-expire: 86400
+  wechat:
+    appid: ENC(qmV20TYj2X3OWZhPNFXzBVrEse2pOfPFsZ2CEjss3LdcOS+ByOgvhTEE3dLBi7+JpOsTTCTRNhxqGCY2JaWq0A==)
+    secret: ENC(9JKN1dGygOPJSuCh6rOxFylQdP1x3FGMz+Vb2G7lxhhCpkyU0Paw8Ymwj0AiEDS6diFHsRLqM+Rq3EKBWPMwPdpJrikQVwU8csfpZtkRGto=)

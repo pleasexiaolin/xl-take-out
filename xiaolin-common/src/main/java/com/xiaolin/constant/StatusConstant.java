@@ -1,7 +1,7 @@
 package com.xiaolin.constant;
 
 /**
- * 状态常量，启用或者禁用
+ * 状态常量
  */
 public class StatusConstant {
 
@@ -10,4 +10,7 @@ public class StatusConstant {
 
     //禁用
     public static final Integer DISABLE = 0;
+
+    // 营业状态key
+    public static final String SHOP_KEY = "admin:shop:status";
 }

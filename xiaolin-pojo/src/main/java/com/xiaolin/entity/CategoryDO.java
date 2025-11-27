@@ -2,6 +2,8 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.constant.StatusConstant;
+import com.xiaolin.dto.CategoryDTO;
 import com.xiaolin.pojo.BaseDO;
 import lombok.*;
 
@@ -12,7 +14,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("CATEGORY")
+@TableName("category")
 public class CategoryDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,4 +32,11 @@ public class CategoryDO extends BaseDO implements Serializable {
 
     //分类状态 0标识禁用 1表示启用
     private Integer status;
+
+    public CategoryDO(CategoryDTO form) {
+        this.type = form.getType();
+        this.name = form.getName();
+        this.sort = form.getSort();
+        this.status = StatusConstant.DISABLE;
+    }
 }

@@ -2,6 +2,7 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.dto.DishFlavorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("DISH_FLAVOR")
+@TableName("dish_flavor")
 public class DishFlavorDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,4 +32,12 @@ public class DishFlavorDO implements Serializable {
     //口味数据list
     private String value;
 
+    public DishFlavorDO(DishFlavorDTO form, Long id) {
+        if (form.getId() != null){
+            this.id = form.getId();
+        }
+        this.dishId = id;
+        this.name = form.getName();
+        this.value = form.getValue();
+    }
 }

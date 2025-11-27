@@ -1,9 +1,6 @@
-package com.xiaolin.entity;
+package com.xiaolin.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,13 +9,7 @@ import java.math.BigDecimal;
  * 套餐菜品关系
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetmealDish implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class SetmealDishDTO implements Serializable {
     private Long id;
 
     //套餐id

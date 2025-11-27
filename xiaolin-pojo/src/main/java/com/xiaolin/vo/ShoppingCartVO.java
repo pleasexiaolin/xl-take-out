@@ -1,25 +1,17 @@
-package com.xiaolin.entity;
+package com.xiaolin.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 购物车
+ * @author lzh
+ * @description: 购物车vo
+ * @date 2025/11/27 18:03
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ShoppingCart implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class ShoppingCartVO {
     private Long id;
 
     //名称

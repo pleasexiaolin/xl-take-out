@@ -3,13 +3,13 @@ package com.xiaolin.pojo;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.xiaolin.context.BaseContext;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
 public class BaseDO {
     /**
      * 创建者
@@ -20,7 +20,7 @@ public class BaseDO {
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    private LocalDateTime createTime;
     /**
      * 更新者
      */
@@ -30,12 +30,13 @@ public class BaseDO {
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
+    // 利用aop注解实现注入
     public BaseDO() {
         this.createUser = BaseContext.getCurrentUser();
         this.updateUser = BaseContext.getCurrentUser();
-        this.createTime = new Date();
-        this.updateTime = new Date();
+        this.createTime = LocalDateTime.now();
+        this.updateTime = LocalDateTime.now();
     }
 }

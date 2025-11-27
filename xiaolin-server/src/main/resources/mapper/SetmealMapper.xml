@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaolin.mapper.SetmealMapper">
+    <select id="page" resultType="com.xiaolin.vo.SetmealVO">
+        SELECT a.id,
+               a.name,
+               a.category_id,
+               a.price,
+               a.image,
+               a.description,
+               a.status,
+               a.update_time,
+               b.name AS categoryName
+        FROM setmeal a
+                 LEFT JOIN category b ON a.category_id = b.id
+        <where>
+            <if test="condition.name != null and condition.name != ''">
+                a.name LIKE CONCAT('%' #{condition.name} '%')
+            </if>
+            <if test="condition.categoryId != null">
+                AND a.category_id = #{condition.categoryId}
+            </if>
+            <if test="condition.status != null">
+                AND a.status = #{condition.status}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="getById" resultType="com.xiaolin.vo.SetmealVO">
+        SELECT a.id,
+               a.name,
+               a.category_id,
+               a.price,
+               a.image,
+               a.description,
+               a.status,
+               a.update_time,
+               b.name AS categoryName
+        FROM setmeal a
+                 LEFT JOIN category b ON a.category_id = b.id
+        where a.id = #{id}
+    </select>
+
+    <select id="getListByCategoryId" resultType="com.xiaolin.vo.SetmealVO">
+        SELECT a.id,
+               a.name,
+               a.category_id,
+               a.price,
+               a.image,
+               a.description,
+               a.status,
+               a.update_time,
+               b.name AS categoryName
+        FROM setmeal a
+                 LEFT JOIN category b ON a.category_id = b.id
+        where a.category_id = #{categoryId}
+    </select>
+
+    <update id="changeStatus">
+        UPDATE setmeal
+        SET status      = #{status},
+            update_time = #{time},
+            update_user = #{updateUser}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateById">
+        UPDATE dish
+        <set>
+            <if test="form.name != null and form.name != ''">
+                name = #{form.name},
+            </if>
+            <if test="form.categoryId != null">
+                category_id = #{form.categoryId},
+            </if>
+            <if test="form.price != null">
+                price = #{form.price},
+            </if>
+            <if test="form.image != null and form.image != ''">
+                image = #{form.image},
+            </if>
+            <if test="form.description != null and form.description != ''">
+                description = #{form.description},
+            </if>
+            <if test="form.status != null">
+                status = #{form.status},
+            </if>
+            update_time = #{time},
+            update_user = #{updateUser}
+        </set>
+        where id = #{form.id}
+    </update>
+
+    <select id="getByName" resultType="com.xiaolin.entity.SetmealDO">
+        SELECT id,
+               name,
+               category_id,
+               price,
+               image,
+               description,
+               status
+        FROM setmeal
+        WHERE name = #{name}
+    </select>
+
+    <select id="getSetmealDishById" resultType="com.xiaolin.entity.SetmealDishDO">
+        select id, setmeal_id, dish_id, name, price, copies
+        from setmeal_dish
+        where setmeal_id = #{setmealId}
+    </select>
+
+    <select id="getEnableListByCategoryId" resultType="com.xiaolin.vo.SetmealVO">
+        SELECT a.id,
+               a.name,
+               a.category_id,
+               a.price,
+               a.image,
+               a.description,
+               a.status,
+               a.update_time,
+               b.name AS categoryName
+        FROM setmeal a
+                 LEFT JOIN category b ON a.category_id = b.id
+        where a.category_id = #{categoryId}
+          and a.status = 1
+        order by a.price
+    </select>
+</mapper>

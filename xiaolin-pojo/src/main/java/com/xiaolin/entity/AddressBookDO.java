@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("ADDRESS_BOOK")
+@TableName("address_book")
 public class AddressBookDO implements Serializable {
 
     private static final long serialVersionUID = 1L;

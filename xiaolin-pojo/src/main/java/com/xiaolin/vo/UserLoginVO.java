@@ -1,5 +1,6 @@
 package com.xiaolin.vo;
 
+import com.xiaolin.entity.UserDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,9 @@ public class UserLoginVO implements Serializable {
     private String openid;
     private String token;
 
+    public UserLoginVO(UserDO userDO, String token) {
+        this.id = userDO.getId();
+        this.openid = userDO.getOpenid();
+        this.token = token;
+    }
 }

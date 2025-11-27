@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("ORDER_DETAIL")
+@TableName("order_detail")
 public class OrderDetailDO implements Serializable {
 
     private static final long serialVersionUID = 1L;

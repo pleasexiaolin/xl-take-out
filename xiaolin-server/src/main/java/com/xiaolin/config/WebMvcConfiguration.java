@@ -1,6 +1,7 @@
 package com.xiaolin.config;
 
 import com.xiaolin.interceptor.JwtTokenAdminInterceptor;
+import com.xiaolin.interceptor.JwtTokenUserInterceptor;
 import com.xiaolin.json.JacksonObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +39,18 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         log.info("开始注册自定义拦截器...");
+
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/employee/login");
+                .excludePathPatterns("/admin/employee/login")
+                .excludePathPatterns("/admin/shop/status");
+
+        registry.addInterceptor(jwtTokenUserInterceptor)
+                .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/login")
+                .excludePathPatterns("/user/shop/status");
+
+        log.info("完成注册自定义拦截器...");
     }
 
     /**
@@ -48,16 +58,34 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @return
      */
     @Bean
-    public Docket docket() {
+    public Docket docketAdmin() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("小林外卖项目接口文档")
+                .title("小叶老师的私厨接口文档")
                 .version("2.0")
-                .description("小林外卖项目接口文档")
+                .description("嘴刁叶老师的后厨文档")
                 .build();
+
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("管理端接口")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.xiaolin.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.xiaolin.controller.admin"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+    @Bean
+    public Docket docketUser() {
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .title("小叶老师的私厨接口文档")
+                .version("2.0")
+                .description("嘴刁叶老师的后厨文档")
+                .build();
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("用户端接口")
+                .apiInfo(apiInfo)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.xiaolin.controller.user"))
                 .paths(PathSelectors.any())
                 .build();
     }

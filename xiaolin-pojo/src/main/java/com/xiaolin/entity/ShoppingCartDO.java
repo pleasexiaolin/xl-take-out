@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("SHOPPING_CART")
+@TableName("shopping_cart")
 public class ShoppingCartDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
