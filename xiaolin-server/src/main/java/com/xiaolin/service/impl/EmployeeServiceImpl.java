@@ -15,7 +15,7 @@ import com.xiaolin.exception.AccountNotFoundException;
 import com.xiaolin.exception.PasswordErrorException;
 import com.xiaolin.mapper.EmployeeMapper;
 import com.xiaolin.properties.JwtProperties;
-import com.xiaolin.query.EmployeeQuery;
+import com.xiaolin.query.EmployeePageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.EmployeeService;
 import com.xiaolin.utils.JwtUtil;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,7 +103,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
     }
 
     @Override
-    public Page<EmployeeVO> pageEmp(EmployeeQuery condition, Page<EmployeeVO> page) {
+    public Page<EmployeeVO> pageEmp(EmployeePageQuery condition, Page<EmployeeVO> page) {
         return baseMapper.pageEmp(condition, page);
     }
 
@@ -141,7 +141,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
                 .idNumber(form.getIdNumber())
                 .build();
         entity.setUpdateUser(BaseContext.getCurrentUser());
-        entity.setUpdateTime(new Date());
+        entity.setUpdateTime(LocalDateTime.now());
         try {
             super.updateById(entity);
         } catch (Exception e) {

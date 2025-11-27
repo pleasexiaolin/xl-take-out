@@ -3,7 +3,7 @@ package com.xiaolin.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaolin.entity.EmployeeDO;
-import com.xiaolin.query.EmployeeQuery;
+import com.xiaolin.query.EmployeePageQuery;
 import com.xiaolin.vo.EmployeeVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +26,7 @@ public interface EmployeeMapper extends BaseMapper<EmployeeDO> {
      * @param page
      * @return
      */
-    Page<EmployeeVO> pageEmp(@Param("condition") EmployeeQuery condition, @Param("page") Page<EmployeeVO> page);
+    Page<EmployeeVO> pageEmp(@Param("condition") EmployeePageQuery condition, @Param("page") Page<EmployeeVO> page);
 
     /**
      * 修改员工状态

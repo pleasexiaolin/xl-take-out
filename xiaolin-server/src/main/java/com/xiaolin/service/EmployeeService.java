@@ -6,7 +6,7 @@ import com.xiaolin.dto.EmpEditPasswordDTO;
 import com.xiaolin.dto.EmployeeDTO;
 import com.xiaolin.dto.EmployeeLoginDTO;
 import com.xiaolin.entity.EmployeeDO;
-import com.xiaolin.query.EmployeeQuery;
+import com.xiaolin.query.EmployeePageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.vo.EmployeeLoginVO;
 import com.xiaolin.vo.EmployeeVO;
@@ -22,7 +22,7 @@ public interface EmployeeService extends IService<EmployeeDO> {
     Result<Integer> save(EmployeeDTO form);
 
     // 分页
-    Page<EmployeeVO> pageEmp(EmployeeQuery condition, Page<EmployeeVO> page);
+    Page<EmployeeVO> pageEmp(EmployeePageQuery condition, Page<EmployeeVO> page);
 
     // 启用、禁用
     Result<Integer> updateStatusById(Integer status, Long id);
