@@ -30,6 +30,7 @@ import java.util.List;
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     private final JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+    private final JwtTokenUserInterceptor jwtTokenUserInterceptor;
 
     /**
      * 注册自定义拦截器
