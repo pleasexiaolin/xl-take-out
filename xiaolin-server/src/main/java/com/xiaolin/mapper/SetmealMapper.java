@@ -32,6 +32,7 @@ public interface SetmealMapper extends BaseMapper<SetmealDO> {
 
     void updateById(@Param("form") SetmealDTO form, @Param("updateUser") String currentUser, @Param("time") LocalDateTime now);
 
-    // 获取套餐的菜品信息
     List<SetmealDishDO> getSetmealDishById(@Param("setmealId") Long id);
+
+    List<SetmealVO> getEnableListByCategoryId(Long categoryId);
 }

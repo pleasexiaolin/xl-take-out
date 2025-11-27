@@ -39,10 +39,12 @@
     <select id="listByType" resultType="com.xiaolin.vo.CategoryVO">
         SELECT id, type, name, sort, status, update_time
         FROM category
-        <where>
-            type = #{type}
-        </where>
-        ORDER BY sort, update_time DESC
+        <if test="type != null">
+            <where>
+                type = #{type}
+            </where>
+        </if>
+        ORDER BY type, sort, update_time DESC
     </select>
 
     <update id="updateById">

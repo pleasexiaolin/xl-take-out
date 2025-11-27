@@ -1,5 +1,6 @@
 package com.xiaolin.vo;
 
+import com.xiaolin.entity.DishDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,11 @@ public class DishItemVO implements Serializable {
 
     //菜品描述
     private String description;
+
+    public DishItemVO(DishDO dishDO, Integer copies) {
+        this.copies = copies;
+        this.description = dishDO.getDescription();
+        this.image = dishDO.getImage();
+        this.name = dishDO.getName();
+    }
 }

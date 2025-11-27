@@ -47,8 +47,8 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             String userId = claims.get(JwtClaimsConstant.USER_ID).toString();
-            String name = claims.get(JwtClaimsConstant.NAME).toString();
-            log.info("当前用户id：{}，用户名：{}", userId, name);
+            //String name = claims.get(JwtClaimsConstant.NAME).toString();
+            log.info("当前用户id：{}", userId);
 
             // name 可能是空 所以展示把 userId 存到线程中
             BaseContext.setCurrentUser(userId);

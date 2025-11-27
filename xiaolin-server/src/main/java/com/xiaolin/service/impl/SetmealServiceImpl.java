@@ -7,20 +7,24 @@ import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.SetmealDTO;
 import com.xiaolin.dto.SetmealDishDTO;
+import com.xiaolin.entity.DishDO;
 import com.xiaolin.entity.SetmealDO;
 import com.xiaolin.entity.SetmealDishDO;
 import com.xiaolin.mapper.SetmealDishMapper;
 import com.xiaolin.mapper.SetmealMapper;
 import com.xiaolin.query.SetmealPageQuery;
 import com.xiaolin.result.Result;
+import com.xiaolin.service.DishService;
 import com.xiaolin.service.SetmealService;
 import com.xiaolin.utils.StringUtils;
+import com.xiaolin.vo.DishItemVO;
 import com.xiaolin.vo.SetmealVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +39,7 @@ import java.util.stream.Collectors;
 public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, SetmealDO> implements SetmealService {
 
     private final SetmealDishMapper setmealDishMapper;
+    private final DishService dishService;
 
     @Override
     public Result<Integer> save(SetmealDTO form) {
@@ -135,6 +140,24 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, SetmealDO> im
         }
 
         return Result.success();
+    }
+
+    @Override
+    public Result<List<SetmealVO>> list(Long categoryId) {
+        return Result.success(baseMapper.getEnableListByCategoryId(categoryId));
+    }
+
+    @Override
+    public Result<List<DishItemVO>> getDishListBySetmealId(Long id) {
+        List<DishItemVO> result = new ArrayList<>();
+        List<SetmealDishDO> setmealDishes = baseMapper.getSetmealDishById(id);
+
+        for (SetmealDishDO setmealDish : setmealDishes) {
+            DishDO dishDO = dishService.getById(setmealDish.getDishId());
+            result.add(new DishItemVO(dishDO,setmealDish.getCopies()));
+        }
+
+        return Result.success(result);
     }
 
     private void updateSetmealDish(SetmealDTO form) {

@@ -7,6 +7,7 @@ import com.xiaolin.vo.UserLoginVO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public Result<UserLoginVO> login(UserLoginDTO form){
+    public Result<UserLoginVO> login(@RequestBody UserLoginDTO form){
         if (StringUtils.isEmpty(form.getCode())){
             return Result.error("code 不能为空");
         }

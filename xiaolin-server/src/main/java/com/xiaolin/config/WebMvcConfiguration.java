@@ -56,9 +56,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public Docket docketAdmin() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("小林外卖项目接口文档")
+                .title("小叶老师的私厨接口文档")
                 .version("2.0")
-                .description("小林外卖项目接口文档")
+                .description("嘴刁叶老师的后厨文档")
                 .build();
 
         return new Docket(DocumentationType.SWAGGER_2)
@@ -72,9 +72,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public Docket docketUser() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("小林外卖项目接口文档")
+                .title("小叶老师的私厨接口文档")
                 .version("2.0")
-                .description("小林外卖项目接口文档")
+                .description("嘴刁叶老师的后厨文档")
                 .build();
 
         return new Docket(DocumentationType.SWAGGER_2)

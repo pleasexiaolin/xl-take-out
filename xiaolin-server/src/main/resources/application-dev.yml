@@ -16,5 +16,5 @@ xl:
     database: 10
     default-expire: 86400
   wechat:
-    appid: xxx
-    secret: xxx
+    appid: ENC(qmV20TYj2X3OWZhPNFXzBVrEse2pOfPFsZ2CEjss3LdcOS+ByOgvhTEE3dLBi7+JpOsTTCTRNhxqGCY2JaWq0A==)
+    secret: ENC(9JKN1dGygOPJSuCh6rOxFylQdP1x3FGMz+Vb2G7lxhhCpkyU0Paw8Ymwj0AiEDS6diFHsRLqM+Rq3EKBWPMwPdpJrikQVwU8csfpZtkRGto=)

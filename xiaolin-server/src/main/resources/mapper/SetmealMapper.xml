@@ -110,4 +110,21 @@
         from setmeal_dish
         where setmeal_id = #{setmealId}
     </select>
+
+    <select id="getEnableListByCategoryId" resultType="com.xiaolin.vo.SetmealVO">
+        SELECT a.id,
+               a.name,
+               a.category_id,
+               a.price,
+               a.image,
+               a.description,
+               a.status,
+               a.update_time,
+               b.name AS categoryName
+        FROM setmeal a
+                 LEFT JOIN category b ON a.category_id = b.id
+        where a.category_id = #{categoryId}
+          and a.status = 1
+        order by a.price
+    </select>
 </mapper>

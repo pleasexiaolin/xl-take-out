@@ -30,4 +30,6 @@ public interface DishMapper extends BaseMapper<DishDO> {
     DishDO getByName(@Param("name") String name);
 
     void updateById(@Param("form") DishDTO form, @Param("updateUser") String currentUser, @Param("time") LocalDateTime now);
+
+    List<DishVO> getEnableDishListByCategoryId(Long categoryId);
 }

@@ -6,7 +6,10 @@ import com.xiaolin.dto.SetmealDTO;
 import com.xiaolin.entity.SetmealDO;
 import com.xiaolin.query.SetmealPageQuery;
 import com.xiaolin.result.Result;
+import com.xiaolin.vo.DishItemVO;
 import com.xiaolin.vo.SetmealVO;
+
+import java.util.List;
 
 /**
  * @author lzh
@@ -31,4 +34,10 @@ public interface SetmealService extends IService<SetmealDO> {
 
     // 批量删除 也可以单个
     Result<Integer> batchRemove(String ids);
+
+    // 根据分类id查询套餐
+    Result<List<SetmealVO>> list(Long categoryId);
+
+    // 获取套餐下的全部菜品
+    Result<List<DishItemVO>> getDishListBySetmealId(Long id);
 }

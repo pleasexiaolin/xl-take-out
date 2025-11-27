@@ -105,4 +105,20 @@
         WHERE name = #{name}
     </select>
 
+    <select id="getEnableDishListByCategoryId" resultType="com.xiaolin.vo.DishVO">
+        SELECT a.id,
+               a.name,
+               a.category_id,
+               a.price,
+               a.image,
+               a.description,
+               a.status,
+               a.update_time,
+               b.name AS categoryName
+        FROM dish a
+                 LEFT JOIN category b ON a.category_id = b.id
+        where a.category_id = #{categoryId}
+          and a.status = 1
+        order by a.price
+    </select>
 </mapper>

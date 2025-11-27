@@ -91,7 +91,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
 
     @Override
     public Result<List<DishVO>> list(Long categoryId) {
-        List<DishVO> vos = baseMapper.getListByCategoryId(categoryId);
+        List<DishVO> vos = baseMapper.getEnableDishListByCategoryId(categoryId);
 
         if (vos == null) {
             return Result.success(null);
