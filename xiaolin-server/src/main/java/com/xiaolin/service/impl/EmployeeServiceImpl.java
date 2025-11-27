@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaolin.constant.JwtClaimsConstant;
 import com.xiaolin.constant.MessageConstant;
 import com.xiaolin.constant.StatusConstant;
+import com.xiaolin.context.BaseContext;
+import com.xiaolin.dto.EmpEditPasswordDTO;
 import com.xiaolin.dto.EmployeeDTO;
 import com.xiaolin.dto.EmployeeLoginDTO;
 import com.xiaolin.entity.EmployeeDO;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +38,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
     private final JwtProperties jwtProperties;
 
     @Override
-    public EmployeeLoginVO login(EmployeeLoginDTO employeeLoginDTO) {
+    public Result<EmployeeLoginVO> login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
 
@@ -70,12 +73,14 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
                 jwtProperties.getAdminTtl(),
                 claims);
 
-        return EmployeeLoginVO.builder()
-                .id(employee.getId())
-                .userName(employee.getUsername())
-                .name(employee.getName())
-                .token(token)
-                .build();
+        return Result.success(
+                EmployeeLoginVO.builder()
+                        .id(employee.getId())
+                        .userName(employee.getUsername())
+                        .name(employee.getName())
+                        .token(token)
+                        .build()
+        );
     }
 
     @Override
@@ -87,14 +92,87 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, EmployeeDO>
             return Result.error("用户名已存在");
         }
 
-        return Result.success(baseMapper.insert(new EmployeeDO(form)));
+        try {
+            baseMapper.insert(new EmployeeDO(form));
+        } catch (Exception e) {
+            log.error("保存员工失败：{}", e.getMessage());
+            return Result.error("保存员工失败");
+        }
+
+        return Result.success();
     }
 
     @Override
     public Page<EmployeeVO> pageEmp(EmployeeQuery condition, Page<EmployeeVO> page) {
-        Page<EmployeeVO> employeeVOPage = baseMapper.pageEmp(condition, page);
-        System.out.println("total:" + employeeVOPage.getTotal());
-        return employeeVOPage;
+        return baseMapper.pageEmp(condition, page);
+    }
+
+    @Override
+    public Result<Integer> updateStatusById(Integer status, Long id) {
+        try {
+            baseMapper.updateStatusById(status, id, BaseContext.getCurrentUser());
+        } catch (Exception e) {
+            log.error("更新员工状态失败：{}", e.getMessage());
+            return Result.error("更新员工状态失败");
+        }
+
+        return Result.success();
+    }
+
+    @Override
+    public Result<EmployeeVO> info(Long id) {
+        return Result.success(baseMapper.getEmpInfo(id));
+    }
+
+    @Override
+    public Result<Integer> update(EmployeeDTO form) {
+        // 幂等校验
+        EmployeeDO empInfo = baseMapper.getByUsername(form.getUsername());
+        if (empInfo != null && !empInfo.getUsername().equals(form.getUsername()) ) {
+            // 已经存在
+            return Result.error("用户名已存在");
+        }
+        EmployeeDO entity = EmployeeDO.builder()
+                .id(form.getId())
+                .username(form.getUsername())
+                .name(form.getName())
+                .phone(form.getPhone())
+                .sex(form.getSex())
+                .idNumber(form.getIdNumber())
+                .build();
+        entity.setUpdateUser(BaseContext.getCurrentUser());
+        entity.setUpdateTime(new Date());
+        try {
+            super.updateById(entity);
+        } catch (Exception e) {
+            log.error("更新员工信息失败：{}", e.getMessage());
+            return Result.error("更新员工信息失败");
+        }
+
+        return Result.success();
+    }
+
+    @Override
+    public Result<Integer> updatePassword(EmpEditPasswordDTO form) {
+        // 幂等校验
+        EmployeeVO empInfo = baseMapper.getEmpInfo(form.getEmpId());
+        if (empInfo == null) {
+            return Result.error("用户不存在");
+        }
+
+        try {
+            String oldPassword = DigestUtils.md5DigestAsHex(form.getOldPassword().getBytes());
+            if (!oldPassword.equals(empInfo.getPassword())) {
+                return Result.error("旧密码错误");
+            }
+            String newPassword = DigestUtils.md5DigestAsHex(form.getNewPassword().getBytes());
+            baseMapper.updatePassword(newPassword, form.getEmpId(), BaseContext.getCurrentUser());
+        } catch (Exception e) {
+            log.error("修改密码失败：{}", e.getMessage());
+            return Result.error("修改密码失败");
+        }
+
+        return Result.success();
     }
 
 }

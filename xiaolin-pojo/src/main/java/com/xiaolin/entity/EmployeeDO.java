@@ -46,4 +46,9 @@ public class EmployeeDO extends BaseDO implements Serializable {
         this.idNumber = form.getIdNumber();
         this.status = StatusConstant.ENABLE;
     }
+
+    public EmployeeDO(Integer status, Long id) {
+        this.id = id;
+        this.status = status;
+    }
 }

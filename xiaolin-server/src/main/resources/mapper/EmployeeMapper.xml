@@ -37,4 +37,33 @@
         </where>
         ORDER BY update_time DESC
     </select>
+
+    <update id="updateStatusById">
+        UPDATE employee
+        SET status = #{status},
+        update_time = now(),
+        update_user = #{updateUser}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getEmpInfo" resultType="com.xiaolin.vo.EmployeeVO">
+        SELECT id,
+               name,
+               username,
+               phone,
+               sex,
+               id_number,
+               status,
+               update_time
+        FROM employee
+        WHERE id = #{id}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE employee
+        SET password = #{newPassword},
+        update_time = now(),
+        update_user = #{updateUser}
+        WHERE id = #{id}
+    </update>
 </mapper>
