@@ -1,7 +1,11 @@
 package com.xiaolin.entity;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.context.BaseContext;
+import com.xiaolin.dto.OrdersSubmitDTO;
+import com.xiaolin.vo.AddressBookVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -110,4 +114,25 @@ public class OrdersDO implements Serializable {
 
     //餐具数量状态  1按餐量提供  0选择具体数量
     private Integer tablewareStatus;
+
+    public OrdersDO(AddressBookVO addrVO, OrdersSubmitDTO form) {
+        this.number = String.valueOf(UUID.randomUUID());
+        this.status = PENDING_PAYMENT;
+        this.userId = Long.valueOf(BaseContext.getCurrentUser());
+        this.addressBookId = form.getAddressBookId();
+        this.orderTime = LocalDateTime.now();
+        this.payMethod = form.getPayMethod();
+        this.payStatus = UN_PAID;
+        this.amount = form.getAmount();
+        this.remark = form.getRemark();
+        // todo 目前没办法获取当前登录用户姓名 先放用户id
+        this.userName = BaseContext.getCurrentUser();
+        this.phone = addrVO.getPhone();
+        this.address = addrVO.getProvinceName() + addrVO.getCityName() + addrVO.getDistrictName() + "-" + addrVO.getDetail();
+        this.consignee = addrVO.getConsignee();
+        this.estimatedDeliveryTime = form.getEstimatedDeliveryTime();
+        this.deliveryStatus = form.getDeliveryStatus();
+        this.packAmount = form.getPackAmount();
+        this.tablewareNumber = form.getTablewareNumber();
+    }
 }

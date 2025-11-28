@@ -1,5 +1,7 @@
 package com.xiaolin.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xiaolin.entity.OrdersDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +23,13 @@ public class OrderSubmitVO implements Serializable {
     //订单金额
     private BigDecimal orderAmount;
     //下单时间
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderTime;
+
+    public OrderSubmitVO(OrdersDO ordersDO) {
+        this.id = ordersDO.getId();
+        this.orderNumber = ordersDO.getNumber();
+        this.orderAmount = ordersDO.getAmount();
+        this.orderTime = ordersDO.getOrderTime();
+    }
 }

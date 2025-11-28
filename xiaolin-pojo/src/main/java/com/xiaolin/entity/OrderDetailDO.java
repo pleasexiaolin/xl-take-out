@@ -2,6 +2,7 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.vo.ShoppingCartVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,4 +48,15 @@ public class OrderDetailDO implements Serializable {
 
     //图片
     private String image;
+
+    public OrderDetailDO(ShoppingCartVO item, Long orderId) {
+        this.name = item.getName();
+        this.orderId = orderId;
+        this.dishId = item.getDishId();
+        this.setmealId = item.getSetmealId();
+        this.dishFlavor = item.getDishFlavor();
+        this.number = item.getNumber();
+        this.amount = item.getAmount();
+        this.image = item.getImage();
+    }
 }
