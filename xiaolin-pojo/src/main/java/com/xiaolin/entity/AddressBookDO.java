@@ -2,6 +2,7 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.dto.AddressBookDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -62,4 +63,20 @@ public class AddressBookDO implements Serializable {
 
     //是否默认 0否 1是
     private Integer isDefault;
+
+    public AddressBookDO(AddressBookDTO form, Long userId) {
+        this.userId = userId;
+        this.consignee = form.getConsignee();
+        this.phone = form.getPhone();
+        this.sex = form.getSex();
+        this.provinceCode = form.getProvinceCode();
+        this.provinceName = form.getProvinceName();
+        this.cityCode = form.getCityCode();
+        this.cityName = form.getCityName();
+        this.districtCode = form.getDistrictCode();
+        this.districtName = form.getDistrictName();
+        this.detail = form.getDetail();
+        this.label = form.getLabel();
+        this.isDefault = form.getIsDefault();
+    }
 }

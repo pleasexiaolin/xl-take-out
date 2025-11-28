@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiaolin.mapper.AddressBookMapper">
+    <select id="listAll" resultType="com.xiaolin.vo.AddressBookVO">
+        select id,
+               user_id,
+               consignee,
+               sex,
+               phone,
+               province_code,
+               province_name,
+               city_code,
+               city_name,
+               district_code,
+               district_name,
+               detail,
+               label,
+               is_default
+        from address_book
+        where user_id = #{userId}
+    </select>
+
+    <select id="getDefaultAddress" resultType="com.xiaolin.vo.AddressBookVO">
+        select id,
+               user_id,
+               consignee,
+               sex,
+               phone,
+               province_code,
+               province_name,
+               city_code,
+               city_name,
+               district_code,
+               district_name,
+               detail,
+               label,
+               is_default
+        from address_book
+        where user_id = #{userId}
+          AND is_default = 1
+    </select>
+
+    <select id="getAddressById" resultType="com.xiaolin.vo.AddressBookVO">
+        select id,
+               user_id,
+               consignee,
+               sex,
+               phone,
+               province_code,
+               province_name,
+               city_code,
+               city_name,
+               district_code,
+               district_name,
+               detail,
+               label,
+               is_default
+        from address_book
+        where user_id = #{userId}
+          AND id = #{id}
+    </select>
+
+    <select id="setDefAddrById" resultType="java.lang.Integer">
+        update address_book
+        set is_default = 1
+        where id = #{id}
+          and user_id = #{userId}
+    </select>
+
+    <delete id="removeDefAddr">
+        update address_book
+        set is_default = 0
+        where id = #{id}
+          and user_id = #{userId}
+    </delete>
+
+    <update id="updateById">
+        update address_book
+        <set>
+            <if test="form.consignee != null and form.consignee != ''">
+                consignee = #{form.consignee},
+            </if>
+            <if test="form.sex != null and form.sex != ''">
+                sex = #{form.sex},
+            </if>
+            <if test="form.phone != null and form.phone != ''">
+                phone = #{form.phone},
+            </if>
+            <if test="form.provinceCode != null and form.provinceCode != ''">
+                province_code = #{form.provinceCode},
+            </if>
+            <if test="form.provinceName != null and form.provinceName != ''">
+                province_name = #{form.provinceName},
+            </if>
+            <if test="form.cityCode != null and form.cityCode != ''">
+                city_code = #{form.cityCode},
+            </if>
+            <if test="form.cityName != null and form.cityName != ''">
+                city_name = #{form.cityName},
+            </if>
+            <if test="form.districtCode != null and form.districtCode != ''">
+                district_code = #{form.districtCode},
+            </if>
+            <if test="form.districtName != null and form.districtName != ''">
+                district_name = #{form.districtName},
+            </if>
+            <if test="form.detail != null and form.detail != ''">
+                detail = #{form.detail},
+            </if>
+            <if test="form.label != null and form.label != ''">
+                label = #{form.label},
+            </if>
+            <if test="form.isDefault != null">
+                is_default = #{form.isDefault},
+            </if>
+        </set>
+        where id = #{form.id}
+    </update>
+</mapper>
