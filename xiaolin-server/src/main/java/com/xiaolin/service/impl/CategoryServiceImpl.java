@@ -101,7 +101,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryDO>
     }
 
     @Override
-    public Result<List<CategoryVO>> list(Integer type) {
+    public Result<List<CategoryVO>> listAll(Integer type) {
         return Result.success(baseMapper.listByType(type));
+    }
+
+    @Override
+    public Result<List<CategoryVO>> listEnable(Integer type) {
+        return  Result.success(baseMapper.listEnable(type));
     }
 }

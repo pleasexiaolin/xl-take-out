@@ -18,6 +18,10 @@ spring:
     password: ${xl.redis.password}
     database: ${xl.redis.database}
     timeout: 5000
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 logging:
   level:

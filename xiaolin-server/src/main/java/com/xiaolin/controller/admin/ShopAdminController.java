@@ -1,6 +1,6 @@
 package com.xiaolin.controller.admin;
 
-import com.xiaolin.constant.StatusConstant;
+import com.xiaolin.constant.RedisKeyConstant;
 import com.xiaolin.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,7 +25,7 @@ public class ShopAdminController {
     @GetMapping("/status")
     public Result<Integer> status() {
         // 读取营业状态
-        Integer status = (Integer) redisTemplate.opsForValue().get(StatusConstant.SHOP_KEY);
+        Integer status = (Integer) redisTemplate.opsForValue().get(RedisKeyConstant.SHOP_KEY);
         return Result.success(status);
     }
 
@@ -40,7 +40,7 @@ public class ShopAdminController {
         }
 
         // 存入营业状态
-        redisTemplate.opsForValue().set(StatusConstant.SHOP_KEY,status);
+        redisTemplate.opsForValue().set(RedisKeyConstant.SHOP_KEY,status);
         return Result.success();
     }
 

@@ -56,9 +56,20 @@
                 name = #{entity.name}
             </if>
             <if test="entity.sort != null">
-                ,sort = #{entity.sort}
+                ,
+                    sort = #{entity.sort}
             </if>
         </set>
         WHERE id = #{entity.id}
     </update>
+
+    <select id="listEnable" resultType="com.xiaolin.vo.CategoryVO">
+        SELECT id, type, name, sort, status, update_time
+        FROM category
+        where status = 1
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        ORDER BY type, sort, update_time DESC
+    </select>
 </mapper>

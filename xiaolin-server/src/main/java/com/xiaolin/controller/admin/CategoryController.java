@@ -113,7 +113,7 @@ public class CategoryController {
         if (type == null) {
             return Result.error("类型不能为空");
         }
-        return categoryService.list(type);
+        return categoryService.listAll(type);
     }
 
 }

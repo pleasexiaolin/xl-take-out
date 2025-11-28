@@ -43,7 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, userDO.getId());
-        claims.put(JwtClaimsConstant.NAME, userDO.getName());
+        //claims.put(JwtClaimsConstant.NAME, userDO.getName());
         String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);
 
         return Result.success(new UserLoginVO(userDO, token));

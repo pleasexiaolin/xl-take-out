@@ -35,5 +35,8 @@ public interface CategoryService extends IService<CategoryDO> {
     Result<CategoryVO> info(Long id);
 
     // 分类列表
-    Result<List<CategoryVO>> list(Integer type);
+    Result<List<CategoryVO>> listAll(Integer type);
+
+    // 分类列表
+    Result<List<CategoryVO>> listEnable(Integer type);
 }

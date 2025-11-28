@@ -2,6 +2,10 @@ package com.xiaolin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xiaolin.context.BaseContext;
+import com.xiaolin.vo.DishVO;
+import com.xiaolin.vo.SetmealVO;
+import com.xiaolin.vo.ShoppingCartVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,4 +54,37 @@ public class ShoppingCartDO implements Serializable {
     private String image;
 
     private LocalDateTime createTime;
+
+    public ShoppingCartDO(ShoppingCartVO cartVO, DishVO dishVO,String dishFlavor) {
+        if (cartVO != null) {
+            this.id = cartVO.getId();
+            this.number = cartVO.getNumber() + 1;
+            this.amount = dishVO.getPrice();
+        }else {
+            this.name = dishVO.getName();
+            this.userId = Long.valueOf(BaseContext.getCurrentUser());
+            this.dishId = dishVO.getId();
+            this.dishFlavor = dishFlavor;
+            this.number = 1;
+            this.amount = dishVO.getPrice();
+            this.image = dishVO.getImage();
+            this.createTime = LocalDateTime.now();
+        }
+    }
+
+    public ShoppingCartDO(ShoppingCartVO cartVO, SetmealVO setmealVO) {
+        if (cartVO != null) {
+            this.id = cartVO.getId();
+            this.number = cartVO.getNumber() + 1;
+            this.amount = setmealVO.getPrice();
+        }else {
+            this.name = setmealVO.getName();
+            this.userId = Long.valueOf(BaseContext.getCurrentUser());
+            this.setmealId = setmealVO.getId();
+            this.number = 1;
+            this.amount = setmealVO.getPrice();
+            this.image = setmealVO.getImage();
+            this.createTime = LocalDateTime.now();
+        }
+    }
 }

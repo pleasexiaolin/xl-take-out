@@ -25,4 +25,32 @@ public interface EmployeeMapper extends BaseMapper<EmployeeDO> {
      * @return
      */
     Page<EmployeeVO> pageEmp(@Param("condition") EmployeePageQuery condition, @Param("page")Page<EmployeeVO> page);
+
+    /**
+     * 修改员工状态
+     *
+     * @param status
+     * @param id
+     * @param updateUser
+     * @return
+     */
+    Integer updateStatusById(@Param("status")Integer status, @Param("id")Long id, @Param("updateUser")String updateUser);
+
+    /**
+     * 获取员工信息
+     *
+     * @param id
+     * @return
+     */
+    EmployeeVO getEmpInfo(Long id);
+
+    /**
+     * 修改密码
+     *
+     * @param newPassword
+     * @param id
+     * @param updateUser
+     */
+    void updatePassword(@Param("newPassword")String newPassword, @Param("id")Long id,@Param("updateUser") String updateUser);
+
 }

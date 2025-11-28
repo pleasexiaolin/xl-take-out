@@ -38,7 +38,7 @@ public class CateSetmealDishController {
      */
     @GetMapping("/category/list")
     public Result<List<CategoryVO>> categoryList(Integer type) {
-        return categoryService.list(type);
+        return categoryService.listEnable(type);
     }
 
     /**
@@ -62,6 +62,7 @@ public class CateSetmealDishController {
      * @return
      */
     @GetMapping("/setmeal/list")
+    //@Cacheable(cacheNames = RedisKeyConstant.SETMEAL_KEY, key = "#categoryId") //key: setmealCache::100
     public Result<List<SetmealVO>> setmealList(Long categoryId) {
         if (categoryId == null) {
             return Result.error("分类id不能为空！");

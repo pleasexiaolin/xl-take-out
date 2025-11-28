@@ -30,4 +30,6 @@ public interface CategoryMapper extends BaseMapper<CategoryDO> {
     List<CategoryVO> listByType(@Param("type") Integer type);
 
     void updateById(@Param("entity") CategoryDTO entity, @Param("updateUser") String updateUser,@Param("time") LocalDateTime time);
+
+    List<CategoryVO> listEnable(Integer type);
 }

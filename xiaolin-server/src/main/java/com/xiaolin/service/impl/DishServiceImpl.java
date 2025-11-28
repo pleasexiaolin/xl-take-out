@@ -3,6 +3,7 @@ package com.xiaolin.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaolin.constant.RedisKeyConstant;
 import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.DishDTO;
@@ -15,6 +16,7 @@ import com.xiaolin.query.DishPageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.DishFlavorService;
 import com.xiaolin.service.DishService;
+import com.xiaolin.utils.RedisUtil;
 import com.xiaolin.utils.StringUtils;
 import com.xiaolin.vo.DishFlavorVO;
 import com.xiaolin.vo.DishVO;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements DishService {
 
+    private final RedisUtil redisUtil;
     private final DishFlavorService dishFlavorService;
     private final SetmealDishMapper setmealDishMapper;
 
@@ -63,6 +66,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
             dishFlavorService.saveBatch(form.getFlavors().stream().map(item -> new DishFlavorDO(item, dishDO.getId())).collect(Collectors.toList()));
         }
 
+        // 清理redis缓存
+        redisUtil.cleanCache(RedisKeyConstant.DISH_KEY + form.getCategoryId());
         return Result.success();
     }
 
@@ -91,6 +96,13 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
 
     @Override
     public Result<List<DishVO>> list(Long categoryId) {
+        String key = RedisKeyConstant.DISH_KEY + categoryId;
+        // 获取redis数据
+        List<DishVO> cachedData = redisUtil.getValueAs(key, List.class);
+        if(CollectionUtil.isNotEmpty(cachedData)){
+            return Result.success(cachedData);
+        }
+
         List<DishVO> vos = baseMapper.getEnableDishListByCategoryId(categoryId);
 
         if (vos == null) {
@@ -100,6 +112,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
             List<DishFlavorVO> flavorVOS = dishFlavorService.getByDishId(vo.getId());
             vo.setFlavors(flavorVOS);
         });
+
+        // 缓存数据
+        redisUtil.setValue(key, vos);
         return Result.success(vos);
     }
 
@@ -111,6 +126,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
             log.error("修改菜品状态失败，message：{}", e.getMessage());
             return Result.error("系统异常，请稍后重试。");
         }
+
+        // 清理redis缓存
+        redisUtil.deleteKeysByPrefix(RedisKeyConstant.DISH_KEY);
         return Result.success();
     }
 
@@ -134,6 +152,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         // 修改菜品口味
         dishFlavorService.batchUpdate(form);
 
+        // 清理redis缓存
+        redisUtil.deleteKeysByPrefix(RedisKeyConstant.DISH_KEY);
         return Result.success();
     }
 
@@ -183,6 +203,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
             return Result.error("系统异常，请稍后重试");
         }
 
+        // 清理redis缓存
+        redisUtil.deleteKeysByPrefix(RedisKeyConstant.DISH_KEY);
         return Result.success();
     }
 }

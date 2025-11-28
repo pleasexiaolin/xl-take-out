@@ -5,30 +5,30 @@
 
     <select id="getByUsername" resultType="com.xiaolin.entity.EmployeeDO">
         select id,
-               name,
-               username,
-               password,
-               phone,
-               sex,
-               id_number,
-               status,
-               create_time,
-               update_time,
-               create_user,
-               update_user
+        name,
+        username,
+        password,
+        phone,
+        sex,
+        id_number,
+        status,
+        create_time,
+        update_time,
+        create_user,
+        update_user
         from employee
         where username = #{username}
     </select>
 
     <select id="pageEmp" resultType="com.xiaolin.vo.EmployeeVO">
         SELECT id,
-               name,
-               username,
-               phone,
-               sex,
-               id_number,
-               status,
-               update_time
+        name,
+        username,
+        phone,
+        sex,
+        id_number,
+        status,
+        update_time
         FROM employee
         <where>
             <if test="condition.name != null and condition.name != ''">
@@ -37,4 +37,33 @@
         </where>
         ORDER BY update_time DESC
     </select>
+
+    <update id="updateStatusById">
+        UPDATE employee
+        SET status = #{status},
+        update_time = now(),
+        update_user = #{updateUser}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getEmpInfo" resultType="com.xiaolin.vo.EmployeeVO">
+        SELECT id,
+        name,
+        username,
+        phone,
+        sex,
+        id_number,
+        status,
+        update_time
+        FROM employee
+        WHERE id = #{id}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE employee
+        SET password = #{newPassword},
+        update_time = now(),
+        update_user = #{updateUser}
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -24,6 +24,7 @@ public class SetmealController {
 
     /**
      * 新增
+     *
      * @param form
      * @return
      */
@@ -58,8 +59,10 @@ public class SetmealController {
         }
         return setmealService.info(id);
     }
+
     /**
      * 启用、禁用
+     *
      * @param status
      * @param id
      * @return
@@ -74,11 +77,12 @@ public class SetmealController {
 
     /**
      * 修改
+     *
      * @param form
      * @return
      */
     @PutMapping
-    public Result<Integer> update(@RequestBody SetmealDTO form){
+    public Result<Integer> update(@RequestBody SetmealDTO form) {
         if (form.getId() == null) {
             return Result.error("状态或id不能为空！");
         }
@@ -87,11 +91,12 @@ public class SetmealController {
 
     /**
      * 批量删除
+     *
      * @param ids 逗号分割
      * @return
      */
     @DeleteMapping
-    public Result<Integer> batchRemove(String ids){
+    public Result<Integer> batchRemove(String ids) {
         if (ids == null || ids.trim().isEmpty()) {
             return Result.error("请选择要删除的数据");
         }
