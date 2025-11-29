@@ -42,6 +42,8 @@ public class OrdersDO implements Serializable {
     public static final Integer PAID = 1;
     public static final Integer REFUND = 2;
 
+    public static final Integer BALANCE_PAY = 3;
+
     private static final long serialVersionUID = 1L;
     @TableId
     private Long id;
@@ -64,7 +66,7 @@ public class OrdersDO implements Serializable {
     //结账时间
     private LocalDateTime checkoutTime;
 
-    //支付方式 1微信，2支付宝
+    //支付方式 1微信，2支付宝 3余额支付
     private Integer payMethod;
 
     //支付状态 0未支付 1已支付 2退款
@@ -121,7 +123,8 @@ public class OrdersDO implements Serializable {
         this.userId = Long.valueOf(BaseContext.getCurrentUser());
         this.addressBookId = form.getAddressBookId();
         this.orderTime = LocalDateTime.now();
-        this.payMethod = form.getPayMethod();
+        // todo 没办法接入商户 只能余额付款
+        this.payMethod = BALANCE_PAY;
         this.payStatus = UN_PAID;
         this.amount = form.getAmount();
         this.remark = form.getRemark();
@@ -134,5 +137,11 @@ public class OrdersDO implements Serializable {
         this.deliveryStatus = form.getDeliveryStatus();
         this.packAmount = form.getPackAmount();
         this.tablewareNumber = form.getTablewareNumber();
+    }
+
+    public OrdersDO(Long id, Integer payStatus, Integer status) {
+        this.id = id;
+        this.payStatus = payStatus;
+        this.status = status;
     }
 }

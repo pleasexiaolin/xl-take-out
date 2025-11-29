@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -42,8 +43,18 @@ public class UserDO implements Serializable {
     //注册时间
     private LocalDateTime createTime;
 
+    // 余额
+    private BigDecimal balance;
+
     public UserDO(String openid) {
         this.openid = openid;
+        // 初始余额默认1000 模拟支付
+        balance = BigDecimal.valueOf(1000);
         createTime = LocalDateTime.now();
+    }
+
+    public UserDO(Long id, BigDecimal currentBalance) {
+        this.id = id;
+        this.balance = currentBalance;
     }
 }

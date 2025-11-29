@@ -87,4 +87,16 @@ public class ShoppingCartDO implements Serializable {
             this.createTime = LocalDateTime.now();
         }
     }
+
+    public ShoppingCartDO(OrderDetailDO item) {
+        this.name = item.getName();
+        this.image = item.getImage();
+        this.userId = Long.valueOf(BaseContext.getCurrentUser());
+        this.dishId = item.getId();
+        this.setmealId = item.getSetmealId();
+        this.dishFlavor = item.getDishFlavor();
+        this.number = item.getNumber();
+        this.amount = item.getAmount();
+        this.createTime = LocalDateTime.now();
+    }
 }

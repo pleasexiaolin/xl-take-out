@@ -3,6 +3,9 @@ package com.xiaolin.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xiaolin.entity.OrderDetailDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author lzh
@@ -11,4 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface OrderDetailMapper extends BaseMapper<OrderDetailDO> {
+    List<OrderDetailDO> getByOrderId(@Param("id") Long id);
 }

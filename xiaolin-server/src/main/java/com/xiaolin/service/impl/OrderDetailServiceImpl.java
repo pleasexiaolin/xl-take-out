@@ -6,6 +6,8 @@ import com.xiaolin.mapper.OrderDetailMapper;
 import com.xiaolin.service.OrderDetailService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author lzh
  * @description:
@@ -13,4 +15,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, OrderDetailDO> implements OrderDetailService {
+    @Override
+    public List<OrderDetailDO> getByOrderId(Long id) {
+        return baseMapper.getByOrderId(id);
+    }
 }

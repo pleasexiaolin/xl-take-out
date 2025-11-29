@@ -25,15 +25,26 @@ public class UserController {
 
     /**
      * C端登录
+     *
      * @param form
      * @return
      */
     @PostMapping("/login")
-    public Result<UserLoginVO> login(@RequestBody UserLoginDTO form){
-        if (StringUtils.isEmpty(form.getCode())){
+    public Result<UserLoginVO> login(@RequestBody UserLoginDTO form) {
+        if (StringUtils.isEmpty(form.getCode())) {
             return Result.error("code 不能为空");
         }
 
         return userService.login(form);
+    }
+
+    /**
+     * 退出
+     *
+     * @return
+     */
+    @PostMapping("/logout")
+    public Result<String> logout() {
+        return Result.success();
     }
 }
