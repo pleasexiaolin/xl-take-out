@@ -1,10 +1,10 @@
 package com.xiaolin.entity;
 
-import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.OrdersSubmitDTO;
+import com.xiaolin.utils.StringUtils;
 import com.xiaolin.vo.AddressBookVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,7 +51,7 @@ public class OrdersDO implements Serializable {
     //订单号
     private String number;
 
-    //订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消 7退款
+    //订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
     private Integer status;
 
     //下单用户id
@@ -118,7 +118,8 @@ public class OrdersDO implements Serializable {
     private Integer tablewareStatus;
 
     public OrdersDO(AddressBookVO addrVO, OrdersSubmitDTO form) {
-        this.number = String.valueOf(UUID.randomUUID());
+        // number的生成方式 ->  年月日-五位随机字符串
+        this.number = StringUtils.generateOrderNumber();
         this.status = PENDING_PAYMENT;
         this.userId = Long.valueOf(BaseContext.getCurrentUser());
         this.addressBookId = form.getAddressBookId();
@@ -137,11 +138,17 @@ public class OrdersDO implements Serializable {
         this.deliveryStatus = form.getDeliveryStatus();
         this.packAmount = form.getPackAmount();
         this.tablewareNumber = form.getTablewareNumber();
+        this.tablewareStatus = form.getTablewareStatus();
     }
 
     public OrdersDO(Long id, Integer payStatus, Integer status) {
         this.id = id;
-        this.payStatus = payStatus;
-        this.status = status;
+        if (payStatus != null) {
+            this.payStatus = payStatus;
+        }
+        if (status != null) {
+            this.status = status;
+        }
     }
+
 }

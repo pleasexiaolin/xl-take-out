@@ -30,7 +30,7 @@ public class OrderVO implements Serializable {
     private Long addressBookId;
 
     //下单时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private LocalDateTime orderTime;
 
     //结账时间
@@ -72,7 +72,7 @@ public class OrderVO implements Serializable {
     private LocalDateTime cancelTime;
 
     //预计送达时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private LocalDateTime estimatedDeliveryTime;
 
     //配送状态  1立即送出  0选择具体时间

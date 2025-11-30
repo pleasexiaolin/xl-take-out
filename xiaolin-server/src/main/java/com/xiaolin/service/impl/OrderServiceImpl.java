@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaolin.constant.MessageConstant;
 import com.xiaolin.context.BaseContext;
+import com.xiaolin.dto.OrdersCancelDTO;
 import com.xiaolin.dto.OrdersPaymentDTO;
+import com.xiaolin.dto.OrdersRejectionDTO;
 import com.xiaolin.dto.OrdersSubmitDTO;
 import com.xiaolin.entity.OrderDetailDO;
 import com.xiaolin.entity.OrdersDO;
@@ -20,16 +22,14 @@ import com.xiaolin.service.AddressBookService;
 import com.xiaolin.service.OrderDetailService;
 import com.xiaolin.service.OrderService;
 import com.xiaolin.service.ShoppingCartService;
-import com.xiaolin.vo.AddressBookVO;
-import com.xiaolin.vo.OrderSubmitVO;
-import com.xiaolin.vo.OrderVO;
-import com.xiaolin.vo.ShoppingCartVO;
+import com.xiaolin.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,7 +93,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
 
         // 如果订单已经支付直接返回
         if (orderVO.getPayStatus() == 1 || orderVO.getPayStatus() == 2) {
-            return Result.error("该订单已经支付，请勿重复付款！");
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
         // 获取用户余额
@@ -106,7 +106,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
         // 余额充足 修改订单状态 扣除余额
         // 修改订单状态
         try {
-            baseMapper.updateById(new OrdersDO(orderVO.getId(), OrdersDO.PAID, OrdersDO.TO_BE_CONFIRMED));
+            OrdersDO ordersDO = new OrdersDO(orderVO.getId(), OrdersDO.PAID, OrdersDO.TO_BE_CONFIRMED);
+            ordersDO.setCheckoutTime(LocalDateTime.now());
+            baseMapper.updateById(ordersDO);
         } catch (Exception e) {
             log.error("修改订单状态失败 message: {}", e.getMessage());
             return Result.error("系统繁忙，请稍后重试");
@@ -140,17 +142,145 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
     }
 
     @Override
-    public Page<OrderVO> historyOrders(OrdersQuery condition, Page<OrderVO> page) {
+    public Page<OrderVO> adminPage(OrdersQuery condition, Page<OrderVO> page) {
+        return getOrderVOPage(condition, page);
+    }
+
+    @Override
+    public Page<OrderVO> page(OrdersQuery condition, Page<OrderVO> page) {
         condition.setUserId(Long.valueOf(BaseContext.getCurrentUser()));
-        Page<OrderVO> result = baseMapper.page(condition, page);
+        return getOrderVOPage(condition, page);
+    }
 
-        result.getRecords().forEach(item -> {
-            List<OrderDetailDO> detailDOS = orderDetailService.getByOrderId(item.getId());
-            item.setOrderDetailList(detailDOS);
-            item.setOrderDishes(item.getOrderDetailList().stream().map(OrderDetailDO::getName).toString());
-        });
+    @Override
+    public Result<Integer> confirm(Long id) {
+        // 获取订单详情
+        OrdersDO ordersDO = baseMapper.selectById(id);
+        if (ordersDO.getStatus() != 2) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
 
-        return result;
+        // 修改订单状态
+        try {
+            baseMapper.updateById(new OrdersDO(ordersDO.getId(), null, OrdersDO.CONFIRMED));
+        } catch (Exception e) {
+            log.error("修改已接单状态失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        return Result.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Integer> rejection(OrdersRejectionDTO form) {
+        // 获取订单详情
+        OrdersDO ordersDO = baseMapper.selectById(form.getId());
+        if (ordersDO.getStatus() != 2) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 修改订单状态
+        try {
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED);
+            orderDO.setRejectionReason(form.getRejectionReason());
+            baseMapper.updateById(orderDO);
+        } catch (Exception e) {
+            log.error("修改拒单状态失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        // 金额回退
+        UserDO userDO = userMapper.selectById(ordersDO.getUserId());
+        try {
+            userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
+        } catch (Exception e) {
+            log.error("商户拒单 金额回退失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        return Result.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Integer> cancel(OrdersCancelDTO form) {
+        // 获取订单信息
+        OrdersDO ordersDO = baseMapper.selectById(form.getId());
+        // 校验订单是否存在
+        if (ordersDO == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        //订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+        if (ordersDO.getStatus() > 4) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 修改订单状态
+        try {
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED);
+            orderDO.setCancelReason(form.getCancelReason());
+            orderDO.setCancelTime(LocalDateTime.now());
+            baseMapper.updateById(orderDO);
+        } catch (Exception e) {
+            log.error("商家取消订单状态失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        // 金额回退
+        UserDO userDO = userMapper.selectById(ordersDO.getUserId());
+        try {
+            userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
+        } catch (Exception e) {
+            log.error("商家取消后 金额回退失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        return Result.success();
+    }
+
+    @Override
+    public Result<OrderStatisticsVO> statistics() {
+        return Result.success(baseMapper.statistics());
+    }
+
+    @Override
+    public Result<Integer> complete(Long id) {
+        // 获取订单详情
+        OrdersDO ordersDO = baseMapper.selectById(id);
+        if (ordersDO.getStatus() != 4) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 修改订单状态
+        try {
+            baseMapper.updateById(new OrdersDO(ordersDO.getId(), null, OrdersDO.COMPLETED));
+        } catch (Exception e) {
+            log.error("完成订单状态失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        return Result.success();
+    }
+
+    @Override
+    public Result<Integer> delivery(Long id) {
+        // 获取订单详情
+        OrdersDO ordersDO = baseMapper.selectById(id);
+        if (ordersDO.getStatus() != 3) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 修改订单状态
+        try {
+            baseMapper.updateById(new OrdersDO(ordersDO.getId(), null, OrdersDO.DELIVERY_IN_PROGRESS));
+        } catch (Exception e) {
+            log.error("派送订单状态失败 message: {}", e.getMessage());
+            return Result.error("系统繁忙，请稍后重试");
+        }
+
+        return Result.success();
     }
 
     @Override
@@ -191,14 +321,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
 
         // 修改订单状态
         try {
-            baseMapper.updateById(new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED));
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED);
+            orderDO.setCancelReason("不接单 我不要了");
+            orderDO.setCancelTime(LocalDateTime.now());
+            baseMapper.updateById(orderDO);
         } catch (Exception e) {
             log.error("取消订单状态失败 message: {}", e.getMessage());
             return Result.error("系统繁忙，请稍后重试");
         }
 
         // 金额回退
-        UserDO userDO = userMapper.selectById(Integer.valueOf(BaseContext.getCurrentUser()));
+        UserDO userDO = userMapper.selectById(ordersDO.getUserId());
         try {
             userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
         } catch (Exception e) {
@@ -207,5 +340,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
         }
 
         return Result.success();
+    }
+
+    private Page<OrderVO> getOrderVOPage(OrdersQuery condition, Page<OrderVO> page) {
+        Page<OrderVO> result = baseMapper.page(condition, page);
+
+        result.getRecords().forEach(item -> {
+            List<OrderDetailDO> detailDOS = orderDetailService.getByOrderId(item.getId());
+            item.setOrderDetailList(detailDOS);
+
+            String orderDishes = detailDOS.stream()
+                    .map(it -> it.getName() + "*" + it.getNumber())
+                    .collect(Collectors.joining(";"));
+
+            item.setOrderDishes(orderDishes);
+        });
+
+        return result;
     }
 }

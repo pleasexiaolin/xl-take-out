@@ -57,10 +57,33 @@
                tableware_number,
                tableware_status
         from orders
-        where user_id = #{condition.userId}
-        <if test="condition.status != null">
-            and status = #{condition.status}
-        </if>
-        order by order_time desc
+        <where>
+            <if test="condition.userId != null">
+                and user_id = #{condition.userId}
+            </if>
+            <if test="condition.status != null">
+                and status = #{condition.status}
+            </if>
+            <if test="condition.number != null and condition.number != ''">
+                and number = #{condition.number}
+            </if>
+            <if test="condition.phone != null and condition.phone != ''">
+                and phone = #{condition.phone}
+            </if>
+            <if test="condition.beginTime != null">
+                and order_time >= #{condition.beginTime}
+            </if>
+            <if test="condition.endTime != null">
+                and order_time &lt;= #{condition.endTime}
+            </if>
+        </where>
+        order by status, order_time desc
+    </select>
+
+    <select id="statistics" resultType="com.xiaolin.vo.OrderStatisticsVO">
+        SELECT SUM(IF(status = 2, 1, 0)) AS toBeConfirmed,
+               SUM(IF(status = 3, 1, 0)) AS confirmed,
+               SUM(IF(status = 4, 1, 0)) AS deliveryInProgress
+        FROM orders;
     </select>
 </mapper>

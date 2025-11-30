@@ -73,7 +73,7 @@ public class OrderController {
      */
     @GetMapping("/historyOrders")
     public Result<Page<OrderVO>> historyOrders(OrdersQuery condition) {
-        return Result.success(orderService.historyOrders(condition, new Page<>(condition.getPage(), condition.getLimit())));
+        return Result.success(orderService.page(condition, new Page<>(condition.getPage(), condition.getLimit())));
     }
 
     /**

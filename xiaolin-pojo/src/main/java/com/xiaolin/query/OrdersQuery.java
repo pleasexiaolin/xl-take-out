@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author lzh
  * @description: 订单查询
@@ -17,8 +19,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrdersQuery extends PageQuery {
 
-    //
     private Integer status;
 
     private Long userId;
+
+    private LocalDateTime beginTime;
+
+    private LocalDateTime endTime;
+
+    private String number;
+
+    private String phone;
 }
