@@ -2,13 +2,17 @@ package com.xiaolin.controller.admin;
 
 import com.xiaolin.result.Result;
 import com.xiaolin.service.ReportService;
-import com.xiaolin.vo.*;
+import com.xiaolin.vo.OrderReportVO;
+import com.xiaolin.vo.SalesTop10ReportVO;
+import com.xiaolin.vo.TurnoverReportVO;
+import com.xiaolin.vo.UserReportVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 
 /**
@@ -71,9 +75,13 @@ public class ReportController {
         return reportService.top10(begin, end);
     }
 
+    /**
+     * 导出
+     * @param response
+     */
     @GetMapping("/export")
-    public Result<String> export() {
-        return reportService.export();
+    public void export(HttpServletResponse response){
+        reportService.exportBusinessData(response);
     }
 
 }

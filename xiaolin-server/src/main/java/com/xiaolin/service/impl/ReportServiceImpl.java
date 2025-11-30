@@ -6,14 +6,20 @@ import com.xiaolin.mapper.OrderMapper;
 import com.xiaolin.mapper.UserMapper;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.ReportService;
-import com.xiaolin.vo.OrderReportVO;
-import com.xiaolin.vo.SalesTop10ReportVO;
-import com.xiaolin.vo.TurnoverReportVO;
-import com.xiaolin.vo.UserReportVO;
+import com.xiaolin.service.WorkspaceService;
+import com.xiaolin.vo.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -28,12 +34,14 @@ import java.util.stream.Collectors;
  * @description: 统计服务实现
  * @date 2025/11/30 19:19
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
     private final OrderMapper orderMapper;
     private final UserMapper userMapper;
+    private final WorkspaceService workspaceService;
 
 
     @Override
@@ -166,8 +174,55 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Result<String> export() {
-        return null;
+    public void exportBusinessData(HttpServletResponse response) {
+        LocalDate begin = LocalDate.now().minusDays(7);
+        LocalDate end = LocalDate.now().minusDays(1);
+        //查询概览运营数据，提供给Excel模板文件
+        BusinessDataVO businessData = workspaceService.getBusinessData(LocalDateTime.of(begin,LocalTime.MIN), LocalDateTime.of(end, LocalTime.MAX));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("template/OperationalTemplate.xlsx");
+
+        if (inputStream == null) {
+            throw new RuntimeException("无法找到Excel模板文件: template/OperationalTemplate.xlsx");
+        }
+        try {
+            //基于提供好的模板文件创建一个新的Excel表格对象
+            XSSFWorkbook excel = new XSSFWorkbook(inputStream);
+            //获得Excel文件中的一个Sheet页
+            XSSFSheet sheet = excel.getSheet("Sheet1");
+
+            sheet.getRow(1).getCell(1).setCellValue(begin + "至" + end);
+            //获得第4行
+            XSSFRow row = sheet.getRow(3);
+            //获取单元格
+            row.getCell(2).setCellValue(businessData.getTurnover());
+            row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
+            row.getCell(6).setCellValue(businessData.getNewUsers());
+            row = sheet.getRow(4);
+            row.getCell(2).setCellValue(businessData.getValidOrderCount());
+            row.getCell(4).setCellValue(businessData.getUnitPrice());
+            for (int i = 0; i < 7; i++) {
+                LocalDate date = begin.plusDays(i);
+                //准备明细数据
+                businessData = workspaceService.getBusinessData(LocalDateTime.of(date,LocalTime.MIN), LocalDateTime.of(date, LocalTime.MAX));
+                row = sheet.getRow(7 + i);
+                row.getCell(1).setCellValue(date.toString());
+                row.getCell(2).setCellValue(businessData.getTurnover());
+                row.getCell(3).setCellValue(businessData.getValidOrderCount());
+                row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
+                row.getCell(5).setCellValue(businessData.getUnitPrice());
+                row.getCell(6).setCellValue(businessData.getNewUsers());
+            }
+            //通过输出流将文件下载到客户端浏览器中
+            ServletOutputStream out = response.getOutputStream();
+            excel.write(out);
+            //关闭资源
+            out.flush();
+            out.close();
+            excel.close();
+
+        }catch (IOException e){
+            log.error("导出运营数据时发生IO异常", e);
+        }
     }
 
     private Integer getUserCount(LocalDateTime beginTime, LocalDateTime endTime) {
