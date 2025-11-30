@@ -9,6 +9,8 @@ import com.xiaolin.vo.OrderVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author lzh
  * @description: 订单mapper
@@ -21,4 +23,6 @@ public interface OrderMapper extends BaseMapper<OrdersDO> {
     Page<OrderVO> page(@Param("condition") OrdersQuery condition, @Param("page") Page<OrderVO> page);
 
     OrderStatisticsVO statistics();
+
+    List<OrderVO> listByStatus(@Param("status")Integer status);
 }

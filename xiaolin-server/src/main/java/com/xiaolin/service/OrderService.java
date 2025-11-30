@@ -13,6 +13,8 @@ import com.xiaolin.vo.OrderStatisticsVO;
 import com.xiaolin.vo.OrderSubmitVO;
 import com.xiaolin.vo.OrderVO;
 
+import java.util.List;
+
 /**
  * @author lzh
  * @description: 订单服务
@@ -40,6 +42,8 @@ public interface OrderService extends IService<OrdersDO> {
     //==========================通用功能=============================//
     // 详情
     Result<OrderVO> orderDetail(Long id);
+    // 查询某状态下的全部订单
+    List<OrderVO> listByStatus(Integer status);
 
     //==========================管理员功能=============================//
     //分页
@@ -62,6 +66,5 @@ public interface OrderService extends IService<OrdersDO> {
 
     // 派送
     Result<Integer> delivery(Long id);
-
 
 }

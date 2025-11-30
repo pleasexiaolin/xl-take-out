@@ -142,6 +142,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
     }
 
     @Override
+    public List<OrderVO> listByStatus(Integer status) {
+        return baseMapper.listByStatus(status);
+    }
+
+    @Override
     public Page<OrderVO> adminPage(OrdersQuery condition, Page<OrderVO> page) {
         return getOrderVOPage(condition, page);
     }
@@ -180,9 +185,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
+        // 查看支付状态 未支付无法退款和修改支付状态
+        if (ordersDO.getPayStatus() == 1){
+            ordersDO.setPayStatus(OrdersDO.REFUND);
+
+            // 金额回退
+            UserDO userDO = userMapper.selectById(ordersDO.getUserId());
+            try {
+                userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
+            } catch (Exception e) {
+                log.error("商户拒单 金额回退失败 message: {}", e.getMessage());
+                return Result.error("系统繁忙，请稍后重试");
+            }
+        }
+
         // 修改订单状态
         try {
-            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED);
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), ordersDO.getPayStatus(), OrdersDO.CANCELLED);
             orderDO.setRejectionReason(form.getRejectionReason());
             baseMapper.updateById(orderDO);
         } catch (Exception e) {
@@ -190,14 +209,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
             return Result.error("系统繁忙，请稍后重试");
         }
 
-        // 金额回退
-        UserDO userDO = userMapper.selectById(ordersDO.getUserId());
-        try {
-            userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
-        } catch (Exception e) {
-            log.error("商户拒单 金额回退失败 message: {}", e.getMessage());
-            return Result.error("系统繁忙，请稍后重试");
-        }
+
 
         return Result.success();
     }
@@ -217,23 +229,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
+        // 查看支付状态 未支付无法退款和修改支付状态
+        if (ordersDO.getPayStatus() == 1){
+            ordersDO.setPayStatus(OrdersDO.REFUND);
+
+            // 金额回退
+            UserDO userDO = userMapper.selectById(ordersDO.getUserId());
+            try {
+                userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
+            } catch (Exception e) {
+                log.error("商家取消后 金额回退失败 message: {}", e.getMessage());
+                return Result.error("系统繁忙，请稍后重试");
+            }
+        }
+
         // 修改订单状态
         try {
-            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED);
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), ordersDO.getPayStatus(), OrdersDO.CANCELLED);
             orderDO.setCancelReason(form.getCancelReason());
             orderDO.setCancelTime(LocalDateTime.now());
             baseMapper.updateById(orderDO);
         } catch (Exception e) {
             log.error("商家取消订单状态失败 message: {}", e.getMessage());
-            return Result.error("系统繁忙，请稍后重试");
-        }
-
-        // 金额回退
-        UserDO userDO = userMapper.selectById(ordersDO.getUserId());
-        try {
-            userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
-        } catch (Exception e) {
-            log.error("商家取消后 金额回退失败 message: {}", e.getMessage());
             return Result.error("系统繁忙，请稍后重试");
         }
 
@@ -255,7 +272,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
 
         // 修改订单状态
         try {
-            baseMapper.updateById(new OrdersDO(ordersDO.getId(), null, OrdersDO.COMPLETED));
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), null, OrdersDO.COMPLETED);
+            orderDO.setDeliveryTime(LocalDateTime.now());
+            baseMapper.updateById(orderDO);
         } catch (Exception e) {
             log.error("完成订单状态失败 message: {}", e.getMessage());
             return Result.error("系统繁忙，请稍后重试");
@@ -319,23 +338,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
+        // 查看支付状态 未支付无法退款和修改支付状态
+        if (ordersDO.getPayStatus() == 1){
+            ordersDO.setPayStatus(OrdersDO.REFUND);
+
+            // 金额回退
+            UserDO userDO = userMapper.selectById(ordersDO.getUserId());
+            try {
+                userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
+            } catch (Exception e) {
+                log.error("金额回退失败 message: {}", e.getMessage());
+                return Result.error("系统繁忙，请稍后重试");
+            }
+        }
+
         // 修改订单状态
         try {
-            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), OrdersDO.REFUND, OrdersDO.CANCELLED);
-            orderDO.setCancelReason("不接单 我不要了");
+            OrdersDO orderDO = new OrdersDO(ordersDO.getId(), ordersDO.getPayStatus(), OrdersDO.CANCELLED);
+            orderDO.setCancelReason("临时不想要了");
             orderDO.setCancelTime(LocalDateTime.now());
             baseMapper.updateById(orderDO);
         } catch (Exception e) {
             log.error("取消订单状态失败 message: {}", e.getMessage());
-            return Result.error("系统繁忙，请稍后重试");
-        }
-
-        // 金额回退
-        UserDO userDO = userMapper.selectById(ordersDO.getUserId());
-        try {
-            userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().add(ordersDO.getAmount())));
-        } catch (Exception e) {
-            log.error("金额回退失败 message: {}", e.getMessage());
             return Result.error("系统繁忙，请稍后重试");
         }
 
