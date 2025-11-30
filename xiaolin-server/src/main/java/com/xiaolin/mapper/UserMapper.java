@@ -5,6 +5,8 @@ import com.xiaolin.entity.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
+
 /**
  * @author lzh
  * @description: 用户mapper
@@ -13,4 +15,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper extends BaseMapper<UserDO> {
     UserDO getByOpenid(@Param("openid") String openid);
+
+    Integer countByMap(Map<String, Object> map);
 }
