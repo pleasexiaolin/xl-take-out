@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lzh
@@ -35,4 +36,6 @@ public interface SetmealMapper extends BaseMapper<SetmealDO> {
     List<SetmealDishDO> getSetmealDishById(@Param("setmealId") Long id);
 
     List<SetmealVO> getEnableListByCategoryId(Long categoryId);
+
+    Integer countByMap(Map<String, Object> map);
 }

@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lzh
@@ -32,4 +33,6 @@ public interface DishMapper extends BaseMapper<DishDO> {
     void updateById(@Param("form") DishDTO form, @Param("updateUser") String currentUser, @Param("time") LocalDateTime now);
 
     List<DishVO> getEnableDishListByCategoryId(Long categoryId);
+
+    Integer countByMap(Map<String, Object> map);
 }
