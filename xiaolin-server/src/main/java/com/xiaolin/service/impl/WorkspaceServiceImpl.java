@@ -40,7 +40,25 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
         //新增用户数
         Integer newUsers = userMapper.countByMap(begin, end);
-        result.setNewUsers(newUsers);
+        result.setNewUsers(newUsers != null ? newUsers : 0);
+
+        // 处理空值情况，设置默认值为0
+        if (result.getTurnover() == null) {
+            result.setTurnover(0.00);
+        }
+        if (result.getAllOrders() == null) {
+            result.setAllOrders(0);
+        }
+        if (result.getValidOrderCount() == null) {
+            result.setValidOrderCount(0);
+        }
+        if (result.getOrderCompletionRate() == null) {
+            result.setOrderCompletionRate(0.00);
+        }
+        if (result.getUnitPrice() == null) {
+            result.setUnitPrice(0.00);
+        }
+
         return result;
     }
 
