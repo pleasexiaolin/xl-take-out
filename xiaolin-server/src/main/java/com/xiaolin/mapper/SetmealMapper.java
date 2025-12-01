@@ -6,13 +6,13 @@ import com.xiaolin.dto.SetmealDTO;
 import com.xiaolin.entity.SetmealDO;
 import com.xiaolin.entity.SetmealDishDO;
 import com.xiaolin.query.SetmealPageQuery;
+import com.xiaolin.vo.SetmealOverViewVO;
 import com.xiaolin.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lzh
@@ -37,5 +37,5 @@ public interface SetmealMapper extends BaseMapper<SetmealDO> {
 
     List<SetmealVO> getEnableListByCategoryId(Long categoryId);
 
-    Integer countByMap(Map<String, Object> map);
+    SetmealOverViewVO getSetmealOverView();
 }

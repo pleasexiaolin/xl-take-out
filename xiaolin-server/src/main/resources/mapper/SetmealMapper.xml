@@ -128,15 +128,9 @@
         order by a.price
     </select>
 
-    <select id="countByMap" resultType="java.lang.Integer">
-        select count(id) from setmeal
-        <where>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-            <if test="categoryId != null">
-                and category_id = #{categoryId}
-            </if>
-        </where>
+    <select id="getSetmealOverView" resultType="com.xiaolin.vo.SetmealOverViewVO">
+        SELECT SUM(IF(status = 1, 1, 0)) AS sold,
+               SUM(IF(status = 0, 1, 0)) AS discontinued
+        FROM setmeal
     </select>
 </mapper>

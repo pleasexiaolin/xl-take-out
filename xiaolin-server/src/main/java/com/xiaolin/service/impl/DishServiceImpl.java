@@ -26,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -104,13 +106,25 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         }
 
         List<DishVO> vos = baseMapper.getEnableDishListByCategoryId(categoryId);
-
         if (vos == null) {
             return Result.success(null);
         }
+
+        // 批量获取所有菜品的ID
+        List<Long> dishIds = vos.stream()
+                .map(DishVO::getId)
+                .collect(Collectors.toList());
+
+        // 批量查询所有菜品的口味信息
+        List<DishFlavorVO> allFlavors = dishFlavorService.getByDishIds(dishIds);
+
+        // 按菜品ID分组口味信息
+        Map<Long, List<DishFlavorVO>> flavorMap = allFlavors.stream()
+                .collect(Collectors.groupingBy(DishFlavorVO::getDishId));
+
+        // 关联口味信息到菜品
         vos.forEach(vo -> {
-            List<DishFlavorVO> flavorVOS = dishFlavorService.getByDishId(vo.getId());
-            vo.setFlavors(flavorVOS);
+            vo.setFlavors(flavorMap.getOrDefault(vo.getId(), Collections.emptyList()));
         });
 
         // 缓存数据

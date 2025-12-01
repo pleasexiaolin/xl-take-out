@@ -27,4 +27,26 @@
             </if>
         </where>
     </select>
+
+    <select id="getUserDailyStatistics" resultType="com.xiaolin.vo.UserDailyCountVO">
+        SELECT DATE(create_time) as date,
+               COUNT(*)          as newUserCount
+        FROM user
+        WHERE create_time >= #{begin}
+          AND create_time &lt;= #{end}
+        GROUP BY DATE(create_time)
+        ORDER BY date
+    </select>
+
+
+    <select id="getUserCumulativeStatistics" resultType="com.xiaolin.vo.UserCumulativeCountVO">
+        SELECT DATE(create_time)                               AS date,
+               COUNT(*)                                        AS dailyNewUsers,
+               SUM(COUNT(*)) OVER (ORDER BY DATE(create_time)) AS cumulativeUsers
+        FROM user
+        WHERE create_time >= #{begin}
+          AND create_time &lt;= #{end}
+        GROUP BY DATE(create_time)
+        ORDER BY date
+    </select>
 </mapper>

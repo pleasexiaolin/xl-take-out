@@ -35,6 +35,11 @@ public class DishFlavorServiceImpl extends ServiceImpl<DishFlavorMapper, DishFla
     }
 
     @Override
+    public List<DishFlavorVO> getByDishIds(List<Long> dishIds) {
+        return baseMapper.getByDishIds(dishIds);
+    }
+
+    @Override
     public void batchUpdate(DishDTO form) {
         // 获取库中菜品的全部口味  和 表单口味
         List<DishFlavorVO> dataBaseFlavors = baseMapper.getByDishId(form.getId());

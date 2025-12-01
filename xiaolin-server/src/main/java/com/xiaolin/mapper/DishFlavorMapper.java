@@ -18,4 +18,6 @@ public interface DishFlavorMapper extends BaseMapper<DishFlavorDO> {
     List<DishFlavorVO> getByDishId(@Param("id") Long id);
 
     void batchRemove(@Param("dishIds")List<Long> dishIds);
+
+    List<DishFlavorVO> getByDishIds(@Param("ids")List<Long> dishIds);
 }

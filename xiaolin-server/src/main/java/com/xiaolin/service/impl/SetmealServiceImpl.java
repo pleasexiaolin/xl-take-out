@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.SetmealDTO;
-import com.xiaolin.dto.SetmealDishDTO;
 import com.xiaolin.entity.DishDO;
 import com.xiaolin.entity.SetmealDO;
 import com.xiaolin.entity.SetmealDishDO;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,9 +60,10 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, SetmealDO> im
 
         // 保存套餐菜品关联关系
         if (form.getSetmealDishes() != null) {
-            for (SetmealDishDTO dto : form.getSetmealDishes()) {
-                setmealDishMapper.insert(new SetmealDishDO(dto, dishDO.getId()));
-            }
+            List<SetmealDishDO> setmealDishList = form.getSetmealDishes().stream()
+                    .map(dto -> new SetmealDishDO(dto, dishDO.getId()))
+                    .collect(Collectors.toList());
+            setmealDishMapper.insertBatch(setmealDishList);
         }
 
         return Result.success();
@@ -152,10 +153,29 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, SetmealDO> im
         List<DishItemVO> result = new ArrayList<>();
         List<SetmealDishDO> setmealDishes = baseMapper.getSetmealDishById(id);
 
-        for (SetmealDishDO setmealDish : setmealDishes) {
-            DishDO dishDO = dishService.getById(setmealDish.getDishId());
-            result.add(new DishItemVO(dishDO,setmealDish.getCopies()));
+        if (setmealDishes == null || setmealDishes.isEmpty()) {
+            return Result.success(result);
         }
+
+        // 批量获取菜品ID
+        List<Long> dishIds = setmealDishes.stream()
+                .map(SetmealDishDO::getDishId)
+                .collect(Collectors.toList());
+
+        // 批量查询菜品信息
+        List<DishDO> dishList = dishService.listByIds(dishIds);
+
+        // 转换为Map方便快速查找
+        Map<Long, DishDO> dishMap = dishList.stream()
+                .collect(Collectors.toMap(DishDO::getId, dish -> dish));
+
+        // 组装结果
+        result = setmealDishes.stream()
+                .map(setmealDish -> {
+                    DishDO dishDO = dishMap.get(setmealDish.getDishId());
+                    return new DishItemVO(dishDO, setmealDish.getCopies());
+                })
+                .collect(Collectors.toList());
 
         return Result.success(result);
     }
@@ -169,8 +189,11 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, SetmealDO> im
         setmealDishMapper.deleteBySetmealId(form.getId());
 
         // 保存套餐菜品关联关系
-        for (SetmealDishDTO dto : form.getSetmealDishes()) {
-            setmealDishMapper.insert(new SetmealDishDO(dto, form.getId()));
+        if (form.getSetmealDishes() != null) {
+            List<SetmealDishDO> setmealDishList = form.getSetmealDishes().stream()
+                    .map(dto -> new SetmealDishDO(dto, form.getId()))
+                    .collect(Collectors.toList());
+            setmealDishMapper.insertBatch(setmealDishList);
         }
     }
 }

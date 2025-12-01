@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaolin.dto.GoodsSalesDTO;
 import com.xiaolin.entity.OrdersDO;
 import com.xiaolin.query.OrdersQuery;
-import com.xiaolin.vo.OrderStatisticsVO;
-import com.xiaolin.vo.OrderVO;
+import com.xiaolin.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -33,5 +33,16 @@ public interface OrderMapper extends BaseMapper<OrdersDO> {
 
     Integer countByMap(Map<String, Object> map);
 
+    OrderOverViewVO getOrderOverView(@Param("begin")LocalDateTime begin);
+
     List<GoodsSalesDTO> getSalesTop10(@Param("begin") LocalDateTime beginTime, @Param("end")LocalDateTime endTime);
+
+    BusinessDataVO getBusinessData(@Param("begin")LocalDateTime begin, @Param("end")LocalDateTime end);
+
+    OrderReportVO ordersStatistics(@Param("begin") LocalDate begin, @Param("end")LocalDate end);
+
+    List<OrderDailyCountVO> getOrderDailyStatistics(@Param("begin")LocalDateTime beginTime, @Param("end")LocalDateTime endTime);
+
+    List<DailyTurnoverVO> getDailyTurnover(@Param("begin")LocalDateTime beginTime, @Param("end")LocalDateTime endTime);
+
 }

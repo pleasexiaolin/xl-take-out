@@ -2,10 +2,13 @@ package com.xiaolin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xiaolin.entity.UserDO;
+import com.xiaolin.vo.UserCumulativeCountVO;
+import com.xiaolin.vo.UserDailyCountVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author lzh
@@ -16,5 +19,9 @@ import java.util.Map;
 public interface UserMapper extends BaseMapper<UserDO> {
     UserDO getByOpenid(@Param("openid") String openid);
 
-    Integer countByMap(Map<String, Object> map);
+    Integer countByMap(@Param("begin") LocalDateTime beginTime, @Param("end")LocalDateTime endTime);
+
+    List<UserDailyCountVO> getUserDailyStatistics(@Param("begin") LocalDateTime beginTime, @Param("end")LocalDateTime endTime);
+
+    List<UserCumulativeCountVO> getUserCumulativeStatistics(@Param("begin") LocalDateTime beginTime, @Param("end")LocalDateTime endTime);
 }

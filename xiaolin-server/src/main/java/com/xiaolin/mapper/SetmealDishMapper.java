@@ -20,4 +20,6 @@ public interface SetmealDishMapper extends BaseMapper<SetmealDishDO> {
     void deleteBySetmealId(@Param("setmealId") Long setmealId);
 
     List<SetmealDishDO> selectBatchByDishId(@Param("dishIds") List<Long> dishIds);
+
+    void insertBatch(@Param("setmealDishList")List<SetmealDishDO> setmealDishList);
 }

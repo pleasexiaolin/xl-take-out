@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaolin.dto.DishDTO;
 import com.xiaolin.entity.DishDO;
 import com.xiaolin.query.DishPageQuery;
+import com.xiaolin.vo.DishOverViewVO;
 import com.xiaolin.vo.DishVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lzh
@@ -34,5 +34,5 @@ public interface DishMapper extends BaseMapper<DishDO> {
 
     List<DishVO> getEnableDishListByCategoryId(Long categoryId);
 
-    Integer countByMap(Map<String, Object> map);
+    DishOverViewVO getDishOverView();
 }

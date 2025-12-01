@@ -49,7 +49,7 @@ public class UserDO implements Serializable {
     public UserDO(String openid) {
         this.openid = openid;
         // 初始余额默认1000 模拟支付
-        balance = BigDecimal.valueOf(1000);
+        balance = BigDecimal.valueOf(1000000);
         createTime = LocalDateTime.now();
     }
 

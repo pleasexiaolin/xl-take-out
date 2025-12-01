@@ -16,4 +16,13 @@
             #{dishId}
         </foreach>
     </delete>
+
+    <select id="getByDishIds" resultType="com.xiaolin.vo.DishFlavorVO">
+        select id, dish_id, name, value
+        from dish_flavor
+        where dish_id in
+        <foreach item="id" collection="ids" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

@@ -15,10 +15,13 @@ import java.util.List;
 public interface DishFlavorService extends IService<DishFlavorDO> {
     // 获取菜品全部口味
     List<DishFlavorVO> getByDishId(Long id);
+    List<DishFlavorVO> getByDishIds(List<Long> dishIds);
 
     // 更新菜品口味
     void batchUpdate(DishDTO form);
 
     // 删除菜品口味
     void batchRemove(List<Long> dishIds);
+
+
 }

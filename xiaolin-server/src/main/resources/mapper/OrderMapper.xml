@@ -164,4 +164,69 @@
         order by number desc
         limit 0, 10
     </select>
+
+
+    <select id="getOrderOverView" resultType="com.xiaolin.vo.OrderOverViewVO">
+        SELECT SUM(IF(status = 1, 1, 0)) AS waitingOrders,
+               SUM(IF(status = 2, 1, 0)) AS deliveredOrders,
+               SUM(IF(status = 5, 1, 0)) AS completedOrders,
+               SUM(IF(status = 6, 1, 0)) AS cancelledOrders,
+               COUNT(*)                  AS allOrders
+        FROM orders
+        <where>
+            <if test="begin != null">
+                order_time &gt;= #{begin}
+            </if>
+        </where>
+    </select>
+
+    <select id="getBusinessData" resultType="com.xiaolin.vo.BusinessDataVO">
+        SELECT SUM(IF(status = 5, amount, 0)) AS turnover,
+               SUM(IF(status = 5, 1, 0))      AS validOrderCount,
+               COUNT(*)                       AS allOrders
+        FROM orders
+        <where>
+            <if test="begin != null">
+                and order_time &gt;= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="ordersStatistics" resultType="com.xiaolin.vo.OrderReportVO">
+        SELECT SUM(IF(status = 5, 1, 0)) AS validOrderCount,
+               COUNT(*)                  AS totalOrderCount
+        FROM orders
+        <where>
+            <if test="begin != null">
+                and order_time &gt;= #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt;= #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="getOrderDailyStatistics" resultType="com.xiaolin.vo.OrderDailyCountVO">
+        SELECT DATE(order_time)          as date,
+               COUNT(*)                  as totalCount,
+               SUM(IF(status = 5, 1, 0)) as validCount
+        FROM orders
+        WHERE order_time >= #{begin}
+          AND order_time &lt;= #{end}
+        GROUP BY DATE(order_time)
+        ORDER BY date
+    </select>
+
+    <select id="getDailyTurnover" resultType="com.xiaolin.vo.DailyTurnoverVO">
+        SELECT DATE(order_time)               as date,
+               SUM(IF(status = 5, amount, 0)) as turnover
+        FROM orders
+        WHERE order_time >= #{begin}
+          AND order_time &lt;= #{end}
+        GROUP BY DATE(order_time)
+        ORDER BY date
+    </select>
 </mapper>
