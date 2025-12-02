@@ -167,8 +167,8 @@
 
 
     <select id="getOrderOverView" resultType="com.xiaolin.vo.OrderOverViewVO">
-        SELECT SUM(IF(status = 1, 1, 0)) AS waitingOrders,
-               SUM(IF(status = 2, 1, 0)) AS deliveredOrders,
+        SELECT SUM(IF(status = 2, 1, 0)) AS waitingOrders,
+               SUM(IF(status = 3, 1, 0)) AS deliveredOrders,
                SUM(IF(status = 5, 1, 0)) AS completedOrders,
                SUM(IF(status = 6, 1, 0)) AS cancelledOrders,
                COUNT(*)                  AS allOrders
