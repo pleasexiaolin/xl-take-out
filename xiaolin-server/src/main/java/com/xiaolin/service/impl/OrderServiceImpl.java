@@ -116,7 +116,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrdersDO> impleme
         // 扣除余额
         try {
             userMapper.updateById(new UserDO(userDO.getId(), userDO.getBalance().subtract(orderVO.getAmount())));
-            log.info("用户：{} 消费 {} 元", userDO.getId(), orderVO.getAddress());
+            log.info("用户：{} 消费 {} 元", userDO.getId(), orderVO.getAmount());
         } catch (Exception e) {
             log.error("扣除余额失败 message: {}", e.getMessage());
             return Result.error("系统繁忙，请稍后重试");
