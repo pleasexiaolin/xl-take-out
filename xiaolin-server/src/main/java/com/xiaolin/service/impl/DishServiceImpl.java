@@ -107,7 +107,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
 
         List<DishVO> vos = baseMapper.getEnableDishListByCategoryId(categoryId);
         if (vos == null) {
-            return Result.success(null);
+            return Result.success();
         }
 
         // 批量获取所有菜品的ID

@@ -96,7 +96,7 @@ public class AddressBookServiceImpl extends ServiceImpl<AddressBookMapper, Addre
         // 判断当前地址是否默认地址
         AddressBookVO currentAddr = baseMapper.getAddressById(id, getCurrentUserId());
         if (currentAddr.getIsDefault() == 1){
-            return Result.success("已经是默认地址了哦");
+            return Result.success();
         }
 
         // 更新默认地址
