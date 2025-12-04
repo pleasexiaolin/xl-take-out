@@ -8,6 +8,7 @@
 	<contextName>logback</contextName>
 
 	<property name="log.path" value="D:/Log/xl-take-out" />
+<!--	<property name="log.path" value="/usr/local/app/logs/xl-take-out"/>-->
 
 	<!-- 彩色日志 -->
 	<!-- 彩色日志依赖的渲染类 -->

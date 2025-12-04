@@ -1,6 +1,10 @@
 xl:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    host: 47.99.64.133
+#    port: 3306
+#    database: xiaolin_take_out
+#    username: xiaolin
     host: ENC(/w7zL/BBI69mf0uZ6pT4ystf5LZqD/nZ6oTQyH+KjB2iq47eA0UzzquqzTj2OkJv)
     port: ENC(BO+/M+WIlc7YWsp2F9qCV0KXgLz+l4eMdwcag+YPXzOCzUdlHZpgkzfEODhanbdF)
     database: ENC(Nhdev3PWSWmfbcDPNDqXdKHWQMhnVEKs9ijLRAr15ifJJTBQUPZKyTKgj09ApQrMGCE+m2msJFJgYAbk++AdCQ==)
