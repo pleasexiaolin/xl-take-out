@@ -3,7 +3,7 @@ package com.xiaolin.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xiaolin.constant.RedisKeyConstant;
+import com.xiaolin.constant.RedisConstants;
 import com.xiaolin.constant.StatusConstant;
 import com.xiaolin.context.BaseContext;
 import com.xiaolin.dto.DishDTO;
@@ -16,8 +16,8 @@ import com.xiaolin.query.DishPageQuery;
 import com.xiaolin.result.Result;
 import com.xiaolin.service.DishFlavorService;
 import com.xiaolin.service.DishService;
-import com.xiaolin.utils.RedisUtil;
 import com.xiaolin.utils.StringUtils;
+import com.xiaolin.utils.redis.RedisUtil;
 import com.xiaolin.vo.DishFlavorVO;
 import com.xiaolin.vo.DishVO;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         }
 
         // 清理redis缓存
-        redisUtil.cleanCache(RedisKeyConstant.DISH_KEY + form.getCategoryId());
+        redisUtil.del(RedisConstants.DISH_KEY + form.getCategoryId());
         return Result.success();
     }
 
@@ -98,10 +98,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
 
     @Override
     public Result<List<DishVO>> list(Long categoryId) {
-        String key = RedisKeyConstant.DISH_KEY + categoryId;
+        String key = RedisConstants.DISH_KEY + categoryId;
         // 获取redis数据
-        List<DishVO> cachedData = redisUtil.getValueAs(key, List.class);
-        if(CollectionUtil.isNotEmpty(cachedData)){
+        List<DishVO> cachedData = (List<DishVO>) redisUtil.get(key);
+        if (CollectionUtil.isNotEmpty(cachedData)) {
             return Result.success(cachedData);
         }
 
@@ -128,7 +128,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         });
 
         // 缓存数据
-        redisUtil.setValue(key, vos);
+        redisUtil.set(key, vos);
         return Result.success(vos);
     }
 
@@ -142,7 +142,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         }
 
         // 清理redis缓存
-        redisUtil.deleteKeysByPrefix(RedisKeyConstant.DISH_KEY);
+        redisUtil.delByPrefix(RedisConstants.DISH_KEY);
         return Result.success();
     }
 
@@ -159,7 +159,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         try {
             baseMapper.updateById(form, BaseContext.getCurrentUser(), LocalDateTime.now());
         } catch (Exception e) {
-            log.error("更新分类失败，message：{}", e.getMessage());
+            log.error("更新菜品信息失败，message：{}", e.getMessage());
             return Result.error("系统异常，请稍后重试。");
         }
 
@@ -167,7 +167,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         dishFlavorService.batchUpdate(form);
 
         // 清理redis缓存
-        redisUtil.deleteKeysByPrefix(RedisKeyConstant.DISH_KEY);
+        redisUtil.del(RedisConstants.DISH_KEY + form.getCategoryId());
         return Result.success();
     }
 
@@ -218,7 +218,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, DishDO> implements 
         }
 
         // 清理redis缓存
-        redisUtil.deleteKeysByPrefix(RedisKeyConstant.DISH_KEY);
+        redisUtil.delByPrefix(RedisConstants.DISH_KEY);
         return Result.success();
     }
 }

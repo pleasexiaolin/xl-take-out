@@ -9,11 +9,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "xl.redis")
 @Data
 public class RedisProperties {
-
     private String host;
     private String port;
     private String password;
     private String database;
-    private long defaultExpire;
-
 }

@@ -1,6 +1,7 @@
 package com.xiaolin.controller.user;
 
-import com.xiaolin.constant.RedisKeyConstant;
+
+import com.xiaolin.constant.RedisConstants;
 import com.xiaolin.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +28,7 @@ public class ShopUserController {
     @GetMapping("/status")
     public Result<Integer> status() {
         // 读取营业状态
-        Integer status = (Integer) redisTemplate.opsForValue().get(RedisKeyConstant.SHOP_KEY);
+        Integer status = (Integer) redisTemplate.opsForValue().get(RedisConstants.SHOP_KEY);
         return Result.success(status);
     }
 }
